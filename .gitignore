@@ -1,0 +1,4 @@
+Projects/MDK-ARM/DebugConfig/
+Projects/MDK-ARM/*.uvguix.*
+Output
+*.uvoptx
