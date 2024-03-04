@@ -1,51 +1,22 @@
-/**
- ****************************************************************************************************
- * @file        led.c
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
- * @version     V1.0
- * @date        2020-04-17
- * @brief       LED Çı¶¯´úÂë
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
- ****************************************************************************************************
- * @attention
- *
- * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó STM32F103¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
- *
- * ĞŞ¸ÄËµÃ÷
- * V1.0 20200417
- * µÚÒ»´Î·¢²¼
- *
- ****************************************************************************************************
- */
-
 #include "./BSP/LED/led.h"
 
 
-/**
- * @brief       ³õÊ¼»¯LEDÏà¹ØIO¿Ú, ²¢Ê¹ÄÜÊ±ÖÓ
- * @param       ÎŞ
- * @retval      ÎŞ
- */
 void led_init(void)
 {
     GPIO_InitTypeDef gpio_init_struct;
-    LED0_GPIO_CLK_ENABLE();                                 /* LED0Ê±ÖÓÊ¹ÄÜ */
-    LED1_GPIO_CLK_ENABLE();                                 /* LED1Ê±ÖÓÊ¹ÄÜ */
+    LED0_GPIO_CLK_ENABLE();                                 /* LED0æ—¶é’Ÿä½¿èƒ½ */
+    LED1_GPIO_CLK_ENABLE();                                 /* LED1æ—¶é’Ÿä½¿èƒ½ */
 
-    gpio_init_struct.Pin = LED0_GPIO_PIN;                   /* LED0Òı½Å */
-    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;            /* ÍÆÍìÊä³ö */
-    gpio_init_struct.Pull = GPIO_PULLUP;                    /* ÉÏÀ­ */
-    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;          /* ¸ßËÙ */
-    HAL_GPIO_Init(LED0_GPIO_PORT, &gpio_init_struct);       /* ³õÊ¼»¯LED0Òı½Å */
+    gpio_init_struct.Pin = LED0_GPIO_PIN;                   /* LED0å¼•è„š */
+    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;            /* æ¨æŒ½è¾“å‡º */
+    gpio_init_struct.Pull = GPIO_PULLUP;                    /* ä¸Šæ‹‰ */
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;          /* é«˜é€Ÿ */
+    HAL_GPIO_Init(LED0_GPIO_PORT, &gpio_init_struct);       /* åˆå§‹åŒ–LED0å¼•è„š */
 
-    gpio_init_struct.Pin = LED1_GPIO_PIN;                   /* LED1Òı½Å */
-    HAL_GPIO_Init(LED1_GPIO_PORT, &gpio_init_struct);       /* ³õÊ¼»¯LED1Òı½Å */
+    gpio_init_struct.Pin = LED1_GPIO_PIN;                   /* LED1å¼•è„š */
+    HAL_GPIO_Init(LED1_GPIO_PORT, &gpio_init_struct);       /* åˆå§‹åŒ–LED1å¼•è„š */
     
 
-    LED0(1);                                                /* ¹Ø±Õ LED0 */
-    LED1(1);                                                /* ¹Ø±Õ LED1 */
+    LED0(0);                                                /* æ‰“å¼€ LED0 */
+    LED1(0);                                                /* æ‰“å¼€ LED1 */
 }

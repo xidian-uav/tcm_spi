@@ -1,27 +1,3 @@
-/**
- ****************************************************************************************************
- * @file        spi.h
- * @author      ÕýµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
- * @version     V1.0
- * @date        2020-04-24
- * @brief       SPI Çý¶¯´úÂë
- * @license     Copyright (c) 2020-2032, ¹ãÖÝÊÐÐÇÒíµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
- ****************************************************************************************************
- * @attention
- *
- * ÊµÑéÆ½Ì¨:ÕýµãÔ­×Ó STM32F103¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
- *
- * ÐÞ¸ÄËµÃ÷
- * V1.0 20200424
- * µÚÒ»´Î·¢²¼
- *
- ****************************************************************************************************
- */
-
 #ifndef __SPI_H
 #define __SPI_H
 
@@ -29,28 +5,28 @@
 
 
 /******************************************************************************************/
-/* SPI2 Òý½Å ¶¨Òå */
+/* SPI2 å¼•è„š å®šä¹‰ */
 
 #define SPI2_SCK_GPIO_PORT              GPIOB
 #define SPI2_SCK_GPIO_PIN               GPIO_PIN_13
-#define SPI2_SCK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PB¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define SPI2_SCK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define SPI2_MISO_GPIO_PORT             GPIOB
 #define SPI2_MISO_GPIO_PIN              GPIO_PIN_14
-#define SPI2_MISO_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PB¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define SPI2_MISO_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define SPI2_MOSI_GPIO_PORT             GPIOB
 #define SPI2_MOSI_GPIO_PIN              GPIO_PIN_15
-#define SPI2_MOSI_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PB¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define SPI2_MOSI_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
 
-/* SPI2Ïà¹Ø¶¨Òå */
+/* SPI2ç›¸å…³å®šä¹‰ */
 #define SPI2_SPI                        SPI2
-#define SPI2_SPI_CLK_ENABLE()           do{ __HAL_RCC_SPI2_CLK_ENABLE(); }while(0)    /* SPI2Ê±ÖÓÊ¹ÄÜ */
+#define SPI2_SPI_CLK_ENABLE()           do{ __HAL_RCC_SPI2_CLK_ENABLE(); }while(0)    /* SPI2æ—¶é’Ÿä½¿èƒ½ */
 
 /******************************************************************************************/
 
 
-/* SPI×ÜÏßËÙ¶ÈÉèÖÃ */
+/* SPIæ€»çº¿é€Ÿåº¦è®¾ç½® */
 #define SPI_SPEED_2         0
 #define SPI_SPEED_4         1
 #define SPI_SPEED_8         2

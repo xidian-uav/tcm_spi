@@ -1,23 +1,23 @@
 /**
  ****************************************************************************************************
  * @file        sys.h
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      æ­£ç‚¹åŸå­å›¢é˜Ÿ(ALIENTEK)
  * @version     V1.0
  * @date        2020-04-20
- * @brief       ÏµÍ³³õÊ¼»¯´úÂë(°üÀ¨Ê±ÖÓÅäÖÃ/ÖĞ¶Ï¹ÜÀí/GPIOÉèÖÃµÈ)
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+ * @brief       ç³»ç»Ÿåˆå§‹åŒ–ä»£ç (åŒ…æ‹¬æ—¶é’Ÿé…ç½®/ä¸­æ–­ç®¡ç†/GPIOè®¾ç½®ç­‰)
+ * @license     Copyright (c) 2020-2032, å¹¿å·å¸‚æ˜Ÿç¿¼ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
  ****************************************************************************************************
  * @attention
  *
- * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó STM32F103¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * å®éªŒå¹³å°:æ­£ç‚¹åŸå­ STM32F103å¼€å‘æ¿
+ * åœ¨çº¿è§†é¢‘:www.yuanzige.com
+ * æŠ€æœ¯è®ºå›:www.openedv.com
+ * å…¬å¸ç½‘å€:www.alientek.com
+ * è´­ä¹°åœ°å€:openedv.taobao.com
  *
- * ĞŞ¸ÄËµÃ÷
+ * ä¿®æ”¹è¯´æ˜
  * V1.0 20211103
- * µÚÒ»´Î·¢²¼
+ * ç¬¬ä¸€æ¬¡å‘å¸ƒ
  *
  ****************************************************************************************************
  */
@@ -29,26 +29,26 @@
 
 
 /**
- * SYS_SUPPORT_OSÓÃÓÚ¶¨ÒåÏµÍ³ÎÄ¼ş¼ĞÊÇ·ñÖ§³ÖOS
- * 0,²»Ö§³ÖOS
- * 1,Ö§³ÖOS
+ * SYS_SUPPORT_OSç”¨äºå®šä¹‰ç³»ç»Ÿæ–‡ä»¶å¤¹æ˜¯å¦æ”¯æŒOS
+ * 0,ä¸æ”¯æŒOS
+ * 1,æ”¯æŒOS
  */
 #define SYS_SUPPORT_OS          0
 
 
-/*º¯ÊıÉêÃ÷*******************************************************************************************/
+/*å‡½æ•°ç”³æ˜*******************************************************************************************/
 
-void sys_nvic_set_vector_table(uint32_t baseaddr, uint32_t offset);             /* ÉèÖÃÖĞ¶ÏÆ«ÒÆÁ¿ */
-void sys_standby(void);                                                         /* ½øÈë´ı»úÄ£Ê½ */
-void sys_soft_reset(void);                                                      /* ÏµÍ³Èí¸´Î» */
-uint8_t sys_clock_set(uint32_t plln);                                           /* Ê±ÖÓÉèÖÃº¯Êı */
-void sys_stm32_clock_init(uint32_t plln);                                       /* ÏµÍ³Ê±ÖÓ³õÊ¼»¯º¯Êı */
+void sys_nvic_set_vector_table(uint32_t baseaddr, uint32_t offset);             /* è®¾ç½®ä¸­æ–­åç§»é‡ */
+void sys_standby(void);                                                         /* è¿›å…¥å¾…æœºæ¨¡å¼ */
+void sys_soft_reset(void);                                                      /* ç³»ç»Ÿè½¯å¤ä½ */
+uint8_t sys_clock_set(uint32_t plln);                                           /* æ—¶é’Ÿè®¾ç½®å‡½æ•° */
+void sys_stm32_clock_init(uint32_t plln);                                       /* ç³»ç»Ÿæ—¶é’Ÿåˆå§‹åŒ–å‡½æ•° */
 
-/* ÒÔÏÂÎª»ã±àº¯Êı */
-void sys_wfi_set(void);                                                         /* Ö´ĞĞWFIÖ¸Áî */
-void sys_intx_disable(void);                                                    /* ¹Ø±ÕËùÓĞÖĞ¶Ï */
-void sys_intx_enable(void);                                                     /* ¿ªÆôËùÓĞÖĞ¶Ï */
-void sys_msr_msp(uint32_t addr);                                                /* ÉèÖÃÕ»¶¥µØÖ· */
+/* ä»¥ä¸‹ä¸ºæ±‡ç¼–å‡½æ•° */
+void sys_wfi_set(void);                                                         /* æ‰§è¡ŒWFIæŒ‡ä»¤ */
+void sys_intx_disable(void);                                                    /* å…³é—­æ‰€æœ‰ä¸­æ–­ */
+void sys_intx_enable(void);                                                     /* å¼€å¯æ‰€æœ‰ä¸­æ–­ */
+void sys_msr_msp(uint32_t addr);                                                /* è®¾ç½®æ ˆé¡¶åœ°å€ */
 
 #endif
 

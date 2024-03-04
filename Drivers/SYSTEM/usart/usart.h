@@ -1,29 +1,3 @@
-/**
- ****************************************************************************************************
- * @file        usart.h
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
- * @version     V1.1
- * @date        2023-06-05
- * @brief       ´®¿Ú³õÊ¼»¯´úÂë(Ò»°ãÊÇ´®¿Ú1)£¬Ö§³Öprintf
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
- ****************************************************************************************************
- * @attention
- *
- * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó STM32F103¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
- *
- * ĞŞ¸ÄËµÃ÷
- * V1.0 20211103
- * µÚÒ»´Î·¢²¼
- * V1.1 20230605
- * É¾³ıUSART_UX_IRQHandler()º¯ÊıµÄ³¬Ê±´¦ÀíºÍĞŞ¸ÄHAL_UART_RxCpltCallback()
- *
- ****************************************************************************************************
- */
-
 #ifndef __USART_H
 #define __USART_H
 
@@ -32,37 +6,37 @@
 
 
 /******************************************************************************************/
-/* Òı½Å ºÍ ´®¿Ú ¶¨Òå 
- * Ä¬ÈÏÊÇÕë¶ÔUSART1µÄ.
- * ×¢Òâ: Í¨¹ıĞŞ¸ÄÕâ¼¸¸öºê¶¨Òå,¿ÉÒÔÖ§³ÖUSART1~UART5ÈÎÒâÒ»¸ö´®¿Ú.
+/* å¼•è„š å’Œ ä¸²å£ å®šä¹‰ 
+ * é»˜è®¤æ˜¯é’ˆå¯¹USART1çš„.
+ * æ³¨æ„: é€šè¿‡ä¿®æ”¹è¿™å‡ ä¸ªå®å®šä¹‰,å¯ä»¥æ”¯æŒUSART1~UART5ä»»æ„ä¸€ä¸ªä¸²å£.
  */
 #define USART_TX_GPIO_PORT                  GPIOA
 #define USART_TX_GPIO_PIN                   GPIO_PIN_9
-#define USART_TX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PA¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define USART_TX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PAå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define USART_RX_GPIO_PORT                  GPIOA
 #define USART_RX_GPIO_PIN                   GPIO_PIN_10
-#define USART_RX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PA¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define USART_RX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PAå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define USART_UX                            USART1
 #define USART_UX_IRQn                       USART1_IRQn
 #define USART_UX_IRQHandler                 USART1_IRQHandler
-#define USART_UX_CLK_ENABLE()               do{ __HAL_RCC_USART1_CLK_ENABLE(); }while(0)  /* USART1 Ê±ÖÓÊ¹ÄÜ */
+#define USART_UX_CLK_ENABLE()               do{ __HAL_RCC_USART1_CLK_ENABLE(); }while(0)  /* USART1 æ—¶é’Ÿä½¿èƒ½ */
 
 /******************************************************************************************/
 
-#define USART_REC_LEN               200         /* ¶¨Òå×î´ó½ÓÊÕ×Ö½ÚÊı 200 */
-#define USART_EN_RX                 1           /* Ê¹ÄÜ£¨1£©/½ûÖ¹£¨0£©´®¿Ú1½ÓÊÕ */
-#define RXBUFFERSIZE   1                        /* »º´æ´óĞ¡ */
+#define USART_REC_LEN               200         /* å®šä¹‰æœ€å¤§æ¥æ”¶å­—èŠ‚æ•° 200 */
+#define USART_EN_RX                 1           /* ä½¿èƒ½ï¼ˆ1ï¼‰/ç¦æ­¢ï¼ˆ0ï¼‰ä¸²å£1æ¥æ”¶ */
+#define RXBUFFERSIZE   1                        /* ç¼“å­˜å¤§å° */
 
-extern UART_HandleTypeDef g_uart1_handle;       /* HAL UART¾ä±ú */
+extern UART_HandleTypeDef g_uart1_handle;       /* HAL UARTå¥æŸ„ */
 
-extern uint8_t  g_usart_rx_buf[USART_REC_LEN];  /* ½ÓÊÕ»º³å,×î´óUSART_REC_LEN¸ö×Ö½Ú.Ä©×Ö½ÚÎª»»ĞĞ·û */
-extern uint16_t g_usart_rx_sta;                 /* ½ÓÊÕ×´Ì¬±ê¼Ç */
-extern uint8_t g_rx_buffer[RXBUFFERSIZE];       /* HAL¿âUSART½ÓÊÕBuffer */
+extern uint8_t  g_usart_rx_buf[USART_REC_LEN];  /* æ¥æ”¶ç¼“å†²,æœ€å¤§USART_REC_LENä¸ªå­—èŠ‚.æœ«å­—èŠ‚ä¸ºæ¢è¡Œç¬¦ */
+extern uint16_t g_usart_rx_sta;                 /* æ¥æ”¶çŠ¶æ€æ ‡è®° */
+extern uint8_t g_rx_buffer[RXBUFFERSIZE];       /* HALåº“USARTæ¥æ”¶Buffer */
 
 
-void usart_init(uint32_t bound);                /* ´®¿Ú³õÊ¼»¯º¯Êı */
+void usart_init(uint32_t bound);                /* ä¸²å£åˆå§‹åŒ–å‡½æ•° */
 
 #endif
 
