@@ -160,10 +160,6 @@ uint8_t spi_read_write_byte(SPI_HandleTypeDef hspi, uint8_t tx_data)
  * @param       rx_data_buff  : 接收数据区域的指针
  */
 void spi_read_write_data(SPI_HandleTypeDef hspi, uint8_t* tx_data, uint16_t tx_data_size, uint8_t* rx_data_buff)
-{    
-    uint16_t i;
-    for(i = 0; i < tx_data_size; i++)
-    {
-        rx_data_buff[i] = spi_read_write_byte(hspi, tx_data[i]);
-    }
+{
+    HAL_SPI_TransmitReceive(&hspi, tx_data, rx_data_buff, tx_data_size, 1000);
 }
