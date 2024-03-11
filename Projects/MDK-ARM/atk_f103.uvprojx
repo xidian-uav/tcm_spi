@@ -10,8 +10,8 @@
       <TargetName>SPI</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F103ZE</Device>
@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -323,14 +323,14 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>2</wLevel>
+            <wLevel>3</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>3</v6Lang>
-            <v6LangP>3</v6LangP>
+            <v6LangP>5</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
@@ -409,35 +409,35 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\stm32f1xx_it.c</FilePath>
             </File>
-            <File>
-              <FileName>tcm_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\tcm_spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\1.c</FilePath>
-            </File>
-            <File>
-              <FileName>2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\2.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Drivers/SYSTEM</GroupName>
           <Files>
             <File>
+              <FileName>delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Drivers\SYSTEM\delay\delay.h</FilePath>
+            </File>
+            <File>
               <FileName>delay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\SYSTEM\delay\delay.c</FilePath>
             </File>
             <File>
+              <FileName>sys.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Drivers\SYSTEM\sys\sys.h</FilePath>
+            </File>
+            <File>
               <FileName>sys.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\SYSTEM\sys\sys.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Drivers\SYSTEM\usart\usart.h</FilePath>
             </File>
             <File>
               <FileName>usart.c</FileName>
@@ -530,14 +530,19 @@
           <GroupName>Drivers/BSP</GroupName>
           <Files>
             <File>
+              <FileName>led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Drivers\BSP\LED\led.h</FilePath>
+            </File>
+            <File>
               <FileName>led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\LED\led.c</FilePath>
             </File>
             <File>
-              <FileName>lcd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Drivers\BSP\LCD\lcd.c</FilePath>
+              <FileName>key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Drivers\BSP\KEY\key.h</FilePath>
             </File>
             <File>
               <FileName>key.c</FileName>
@@ -545,39 +550,24 @@
               <FilePath>..\..\Drivers\BSP\KEY\key.c</FilePath>
             </File>
             <File>
+              <FileName>spi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Drivers\BSP\SPI\spi.h</FilePath>
+            </File>
+            <File>
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\SPI\spi.c</FilePath>
             </File>
             <File>
-              <FileName>norflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Drivers\BSP\NORFLASH\norflash.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/USMART</GroupName>
-          <Files>
-            <File>
-              <FileName>usmart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\USMART\usmart.c</FilePath>
+              <FileName>tcm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Drivers\BSP\TCM\tcm.h</FilePath>
             </File>
             <File>
-              <FileName>usmart_config.c</FileName>
+              <FileName>tcm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\USMART\usmart_config.c</FilePath>
-            </File>
-            <File>
-              <FileName>usmart_port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\USMART\usmart_port.c</FilePath>
-            </File>
-            <File>
-              <FileName>usmart_str.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\USMART\usmart_str.c</FilePath>
+              <FilePath>..\..\Drivers\BSP\TCM\tcm.c</FilePath>
             </File>
           </Files>
         </Group>
