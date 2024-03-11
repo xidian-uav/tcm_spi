@@ -7,32 +7,32 @@
  * @param       hspi  : SPI句柄
  * @retval      无
  */
-void spi_init(SPI_HandleTypeDef hspi)
-{
-    if (hspi.Instance == SPI1)
+void spi_init(SPI_HandleTypeDef* hspi)
+{   
+    if (hspi->Instance == SPI1)
     {
         SPI1_SPI_CLK_ENABLE();                                            /* SPI1时钟使能 */
     }
-    else if(hspi.Instance == SPI2)
+    else if(hspi->Instance == SPI2)
     {
         SPI2_SPI_CLK_ENABLE();                                            /* SPI2时钟使能 */
     }
-    else if(hspi.Instance == SPI3)
+    else if(hspi->Instance == SPI3)
     {
         SPI3_SPI_CLK_ENABLE();                                            /* SPI3时钟使能 */
     }
-    else                                                                  /* 初始化错误 */;
+    else                                                                  /* 初始化错误 */
     {
         while(1)
         {
             printf("SPI initialization error.The SPI port does not exist!");
             HAL_Delay(1000);
-        };  
+        }  
     }
 
-    HAL_SPI_Init(&hspi);                                                  /* 初始化 */
+    HAL_SPI_Init(hspi);                                                  /* 初始化 */
 
-    __HAL_SPI_ENABLE(&hspi);                                              /* 使能SPI */
+    __HAL_SPI_ENABLE(hspi);                                              /* 使能SPI */
 
     spi_read_write_byte(hspi, 0Xff); /* 启动传输, 实际上就是产生8个时钟脉冲, 达到清空DR的作用, 非必需 */
 }
@@ -43,7 +43,7 @@ void spi_init(SPI_HandleTypeDef hspi)
  * @param       hspi  : SPI句柄
  * @retval      无
  */
-void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
+void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 {
     GPIO_InitTypeDef gpio_init_struct;
     
@@ -130,13 +130,13 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
  * @retval      无
  */
 
-void spi_set_speed(SPI_HandleTypeDef hspi, uint8_t speed)
+void spi_set_speed(SPI_HandleTypeDef* hspi, uint8_t speed)
 {
     assert_param(IS_SPI_BAUDRATE_PRESCALER(speed)); /* 判断有效性 */
-    __HAL_SPI_DISABLE(&hspi);             /* 关闭SPI */
-    hspi.Instance->CR1 &= 0XFFC7;         /* 位3-5清零，用来设置波特率 */
-    hspi.Instance->CR1 |= speed << 3;     /* 设置SPI速度 */
-    __HAL_SPI_ENABLE(&hspi);              /* 使能SPI */
+    __HAL_SPI_DISABLE(hspi);             /* 关闭SPI */
+    hspi->Instance->CR1 &= 0XFFC7;         /* 位3-5清零，用来设置波特率 */
+    hspi->Instance->CR1 |= speed << 3;     /* 设置SPI速度 */
+    __HAL_SPI_ENABLE(hspi);              /* 使能SPI */
 }
 
 /**
@@ -145,10 +145,10 @@ void spi_set_speed(SPI_HandleTypeDef hspi, uint8_t speed)
  * @param       tx_data  : 要发送的数据(1字节)
  * @retval      接收到的数据(1字节)
  */
-uint8_t spi_read_write_byte(SPI_HandleTypeDef hspi, uint8_t tx_data)
+uint8_t spi_read_write_byte(SPI_HandleTypeDef* hspi, uint8_t tx_data)
 {
     uint8_t rx_data;
-    HAL_SPI_TransmitReceive(&hspi, &tx_data, &rx_data, 1, 1000);
+    HAL_SPI_TransmitReceive(hspi, &tx_data, &rx_data, 1, 1000);
     return rx_data; /* 返回收到的数据 */
 }
 
@@ -159,7 +159,7 @@ uint8_t spi_read_write_byte(SPI_HandleTypeDef hspi, uint8_t tx_data)
  * @param       tx_data_size  : 要发送的数据大小(以字节为单位)
  * @param       rx_data_buff  : 接收数据区域的指针
  */
-void spi_read_write_data(SPI_HandleTypeDef hspi, uint8_t* tx_data, uint16_t tx_data_size, uint8_t* rx_data_buff)
+void spi_read_write_data(SPI_HandleTypeDef* hspi, uint8_t* tx_data, uint16_t tx_data_size, uint8_t* rx_data_buff)
 {
-    HAL_SPI_TransmitReceive(&hspi, tx_data, rx_data_buff, tx_data_size, 1000);
+    HAL_SPI_TransmitReceive(hspi, tx_data, rx_data_buff, tx_data_size, 1000);
 }

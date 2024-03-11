@@ -77,12 +77,12 @@
 #define SPI_SPEED_256       7
 
 
-#define SPI_RX_BUFFER_SIZE 1024         /* SPI接收多个字节时的缓冲区大小 */
+#define SPI_RX_BUFFER_SIZE 256         /* SPI接收多个字节时的缓冲区大小 */
 
-void spi_init(SPI_HandleTypeDef hspi);
-void spi_set_speed(SPI_HandleTypeDef hspi, uint8_t speed);
-uint8_t spi_read_write_byte(SPI_HandleTypeDef hspi, uint8_t tx_data);
-void spi_read_write_data(SPI_HandleTypeDef hspi, uint8_t* tx_data, uint16_t tx_data_size, uint8_t* rx_data_buff);
+void spi_init(SPI_HandleTypeDef* hspi);
+void spi_set_speed(SPI_HandleTypeDef* hspi, uint8_t speed);
+uint8_t spi_read_write_byte(SPI_HandleTypeDef* hspi, uint8_t tx_data);
+void spi_read_write_data(SPI_HandleTypeDef* hspi, uint8_t* tx_data, uint16_t tx_data_size, uint8_t* rx_data_buff);
 #endif
 
 
