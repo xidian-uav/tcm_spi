@@ -2,32 +2,37 @@
 #include "./SYSTEM/usart/usart.h"
 #include "./BSP/SPI/spi.h"
 #include "./BSP/TCM/tcm.h"
+#include "stdlib.h"
 
-SPI_HandleTypeDef hspi; /* SPI句柄 */
+SPI_HandleTypeDef tcmHSpi; /* SPI句柄 */
+
+uint8_t *g_tcm_spi_tx_buff;
+uint8_t *g_tcm_spi_rx_buff;
+
 uint8_t CFG_NOWAIT = 0;
 
 void tcm_init()
 {    
-    hspi.Instance = TCM_SPI;                                 /* SPI1 */
-    hspi.Init.Mode = SPI_MODE_MASTER;                        /* 设置SPI工作模式，设置为主模式 */
-    hspi.Init.Direction = SPI_DIRECTION_2LINES;              /* 设置SPI单向或者双向的数据模式:SPI设置为双线模式 */
-    hspi.Init.DataSize = SPI_DATASIZE_8BIT;                  /* 设置SPI的数据大小:SPI发送接收8位帧结构 */
-    hspi.Init.CLKPolarity = SPI_POLARITY_LOW;                /* 串行同步时钟的空闲状态为低电平 */
-    hspi.Init.CLKPhase = SPI_PHASE_1EDGE;                    /* 串行同步时钟的第一个跳变沿（上升或下降）数据被采样 */
-    hspi.Init.NSS = SPI_NSS_SOFT;                            /* NSS信号由硬件（NSS管脚）还是软件（使用SSI位）管理:内部NSS信号有SSI位控制 */
-    hspi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4; /* 定义波特率预分频的值:波特率预分频值为256 */
-    hspi.Init.FirstBit = SPI_FIRSTBIT_MSB;                   /* 指定数据传输从MSB位还是LSB位开始:数据传输从MSB位开始 */
-    hspi.Init.TIMode = SPI_TIMODE_DISABLE;                   /* 关闭TI模式 */
-    hspi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;   /* 关闭硬件CRC校验 */
-    hspi.Init.CRCPolynomial = 7;                             /* CRC值计算的多项式 */
+    tcmHSpi.Instance = TCM_SPI;                                 /* SPI1 */
+    tcmHSpi.Init.Mode = SPI_MODE_MASTER;                        /* 设置SPI工作模式，设置为主模式 */
+    tcmHSpi.Init.Direction = SPI_DIRECTION_2LINES;              /* 设置SPI单向或者双向的数据模式:SPI设置为双线模式 */
+    tcmHSpi.Init.DataSize = SPI_DATASIZE_8BIT;                  /* 设置SPI的数据大小:SPI发送接收8位帧结构 */
+    tcmHSpi.Init.CLKPolarity = SPI_POLARITY_LOW;                /* 串行同步时钟的空闲状态为低电平 */
+    tcmHSpi.Init.CLKPhase = SPI_PHASE_1EDGE;                    /* 串行同步时钟的第一个跳变沿（上升或下降）数据被采样 */
+    tcmHSpi.Init.NSS = SPI_NSS_SOFT;                            /* NSS信号由硬件（NSS管脚）还是软件（使用SSI位）管理:内部NSS信号有SSI位控制 */
+    tcmHSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4; /* 定义波特率预分频的值:波特率预分频值为256 */
+    tcmHSpi.Init.FirstBit = SPI_FIRSTBIT_MSB;                   /* 指定数据传输从MSB位还是LSB位开始:数据传输从MSB位开始 */
+    tcmHSpi.Init.TIMode = SPI_TIMODE_DISABLE;                   /* 关闭TI模式 */
+    tcmHSpi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;   /* 关闭硬件CRC校验 */
+    tcmHSpi.Init.CRCPolynomial = 7;                             /* CRC值计算的多项式 */
     
-    spi_init(&hspi);                                          /* 初始化SPI */
+    spi_init(&tcmHSpi);                                          /* 初始化SPI */
     
     
     GPIO_InitTypeDef gpio_init_struct;                       // 初始化片选引脚
     
     __HAL_RCC_GPIOA_CLK_ENABLE();
-    gpio_init_struct.Pin = GPIO_PIN_4 | GPIO_PIN_0;
+    gpio_init_struct.Pin = GPIO_PIN_4 | GPIO_PIN_1;
     gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
     gpio_init_struct.Pull = GPIO_NOPULL;
     gpio_init_struct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -35,6 +40,10 @@ void tcm_init()
     
     HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,1);
     HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,1);
+    
+    
+    g_tcm_spi_tx_buff = (uint8_t *)malloc(sizeof(uint8_t) * TCM_MAX_DIGEST_BUFFER);
+    g_tcm_spi_rx_buff = (uint8_t *)malloc(sizeof(uint8_t) * TCM_MAX_DIGEST_BUFFER);
     printf("tcm init successfully!\r\n");
 }
 
@@ -64,7 +73,7 @@ void tcm_write_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *data, u
         tx_data_buff[4+i] = data[i];
     }
     
-    spi_read_write_data(&hspi, tx_data_buff, tx_package_size, rx_data_buff);  /* 发送数据包 */
+    spi_read_write_data(&tcmHSpi, tx_data_buff, tx_package_size, rx_data_buff);  /* 发送数据包 */
     
     printf("TX: ");                             /* 串口输出发送的数据 */
     for(i = 0; i < tx_package_size; i++)
@@ -101,9 +110,7 @@ void tcm_read_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *dest_buf
     {
         tx_data_buff[4 + i] = 0x00;
     }
-
-    spi_read_write_data(&hspi, tx_data_buff, tx_package_size, rx_data_buff);    /* 发送数据包 */
-    
+    spi_read_write_data(&tcmHSpi, tx_data_buff, tx_package_size, rx_data_buff);    /* 发送数据包 */
     printf("TX: ");                                 /* 串口输出发送的数据 */
     for(i = 0; i < tx_package_size; i++)
     {
@@ -140,21 +147,17 @@ int sendCommand(uint8_t *cmd_frame, int cmd_size, uint8_t *resp_buf)
     uint8_t read_buf[TCM_RX_BUFF_SIZE];
     
     CS_LOW;
-    // printf("Siezing locality...\r\n");
+    printf("Siezing locality...\r\n");
     tcm_read_register(0x00, 0x00, NULL, 1);
     CS_HIGH;
-    
     CS_LOW;
     tcm_write_register(0x00, 0x00, "\x02", 1);
     CS_HIGH;
-    
     CS_LOW;
     tcm_read_register(0x00, 0x00, NULL, 1);
     CS_HIGH;
-    
     HAL_Delay(10);
     read_buf[4] = '\x00';
-
     int errcount = 0;
 
     while((read_buf[4] & 0x40) == 0)
@@ -181,7 +184,7 @@ int sendCommand(uint8_t *cmd_frame, int cmd_size, uint8_t *resp_buf)
     {
         printf("Writing all-but-one to 0x0024...\r\n");
         CS_LOW;
-        tcm_write_register(0x00, 0x24, cmd_frame, cmd_size - 1);// "\x80\x01\x00\x00\x00\x0c\x00\x00\x01\x44\x00");
+        tcm_write_register(0x00, 0x24, cmd_frame, cmd_size - 1);
         CS_HIGH;
 
         // NOTE: DELAY.
