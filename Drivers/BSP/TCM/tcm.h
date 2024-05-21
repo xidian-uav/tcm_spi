@@ -6,8 +6,7 @@
 extern SPI_HandleTypeDef tcmHSpi; /* TCMSPI句柄 */
 
 #define TCM_SPI                             SPI1
-#define TCM_RX_BUFF_SIZE                    256
-#define TCM_MAX_DIGEST_BUFFER               512
+#define TCM_SPI_BUFF_SIZE                   512
 
 /* TCM命令宏定义 */
 

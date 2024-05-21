@@ -6,8 +6,8 @@
 
 SPI_HandleTypeDef tcmHSpi; /* SPI句柄 */
 
-uint8_t *g_tcm_spi_tx_buff;
-uint8_t *g_tcm_spi_rx_buff;
+uint8_t g_tcm_spi_tx_buff[TCM_SPI_BUFF_SIZE];
+uint8_t g_tcm_spi_rx_buff[TCM_SPI_BUFF_SIZE];
 
 uint8_t CFG_NOWAIT = 0;
 
@@ -41,9 +41,6 @@ void tcm_init()
     HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,1);
     HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,1);
     
-    
-    g_tcm_spi_tx_buff = (uint8_t *)malloc(sizeof(uint8_t) * TCM_MAX_DIGEST_BUFFER);
-    g_tcm_spi_rx_buff = (uint8_t *)malloc(sizeof(uint8_t) * TCM_MAX_DIGEST_BUFFER);
     printf("tcm init successfully!\r\n");
 }
 
@@ -57,28 +54,25 @@ void target_reset()
 }
 
 void tcm_write_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *data, uint8_t data_size)
-{
-    uint8_t tx_data_buff[TCM_RX_BUFF_SIZE];         /* 发送缓冲区 */
-    uint8_t rx_data_buff[TCM_RX_BUFF_SIZE];         /* 接收缓冲区 */
-    
+{   
     uint16_t tx_package_size = 4 + data_size;       /* 数据包大小 */
-    tx_data_buff[0] = data_size - 1;                /* 载荷大小 */
-    tx_data_buff[1] = 0xD4;                         /* 地址偏移 */
-    tx_data_buff[2] = addr_byte1;                   /* 寄存器地址高位 */
-    tx_data_buff[3] = addr_byte2;                   /* 寄存器地址低位 */
+    g_tcm_spi_tx_buff[0] = data_size - 1;                /* 载荷大小 */
+    g_tcm_spi_tx_buff[1] = 0xD4;                         /* 地址偏移 */
+    g_tcm_spi_tx_buff[2] = addr_byte1;                   /* 寄存器地址高位 */
+    g_tcm_spi_tx_buff[3] = addr_byte2;                   /* 寄存器地址低位 */
     
     int i = 0;                                      /* 连接数据包头和载荷 */
     for(i = 0;i < data_size;i++)
     {
-        tx_data_buff[4+i] = data[i];
+        g_tcm_spi_tx_buff[4+i] = data[i];
     }
     
-    spi_read_write_data(&tcmHSpi, tx_data_buff, tx_package_size, rx_data_buff);  /* 发送数据包 */
+    spi_read_write_data(&tcmHSpi, g_tcm_spi_tx_buff, tx_package_size, g_tcm_spi_rx_buff);  /* 发送数据包 */
     
     printf("TX: ");                             /* 串口输出发送的数据 */
     for(i = 0; i < tx_package_size; i++)
     {
-        printf("%02x ", tx_data_buff[i]);
+        printf("%02x ", g_tcm_spi_tx_buff[i]);
     }
     
     printf("\r\n");
@@ -86,7 +80,7 @@ void tcm_write_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *data, u
     printf("RX: ");                             /* 串口输出接收的数据 */
     for(i = 0; i < tx_package_size; i++)
     {
-        printf("%02x ", rx_data_buff[i]);
+        printf("%02x ", g_tcm_spi_rx_buff[i]);
     }
     
     printf("\r\n");
@@ -95,33 +89,30 @@ void tcm_write_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *data, u
 }
 
 void tcm_read_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *dest_buf, uint8_t read_size)
-{
-    uint8_t tx_data_buff[TCM_RX_BUFF_SIZE];         /* 发送缓冲区 */
-    uint8_t rx_data_buff[TCM_RX_BUFF_SIZE];         /* 接收缓冲区 */
-    
+{    
     uint16_t tx_package_size = 4 + read_size;       /* 数据包大小 */
-    tx_data_buff[0] = 0x80 | read_size - 1;         /* 载荷大小 */
-    tx_data_buff[1] = 0xD4;                         /* 地址偏移 */
-    tx_data_buff[2] = addr_byte1;                   /* 寄存器地址高位 */
-    tx_data_buff[3] = addr_byte2;                   /* 寄存器地址低位 */
+    g_tcm_spi_tx_buff[0] = 0x80 | read_size - 1;         /* 载荷大小 */
+    g_tcm_spi_tx_buff[1] = 0xD4;                         /* 地址偏移 */
+    g_tcm_spi_tx_buff[2] = addr_byte1;                   /* 寄存器地址高位 */
+    g_tcm_spi_tx_buff[3] = addr_byte2;                   /* 寄存器地址低位 */
 
     int i = 0;                                      /* 连接数据包头和载荷 */
     for(i = 0;i < read_size;i++)
     {
-        tx_data_buff[4 + i] = 0x00;
+        g_tcm_spi_tx_buff[4 + i] = 0x00;
     }
-    spi_read_write_data(&tcmHSpi, tx_data_buff, tx_package_size, rx_data_buff);    /* 发送数据包 */
+    spi_read_write_data(&tcmHSpi, g_tcm_spi_tx_buff, tx_package_size, g_tcm_spi_rx_buff);    /* 发送数据包 */
     printf("TX: ");                                 /* 串口输出发送的数据 */
     for(i = 0; i < tx_package_size; i++)
     {
-        printf("%02x ",tx_data_buff[i]);
+        printf("%02x ",g_tcm_spi_tx_buff[i]);
     }
     printf("\r\n");
     
     printf("RX: ");                                 /* 串口输出接收的数据 */
     for(i = 0; i < tx_package_size; i++)
     {
-        printf("%02x ",rx_data_buff[i]);
+        printf("%02x ",g_tcm_spi_rx_buff[i]);
     }
     printf("\r\n");
 
@@ -130,7 +121,7 @@ void tcm_read_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *dest_buf
     {
         for(i = 0; i < tx_package_size; i++)
         {
-            dest_buf[i] = rx_data_buff[i];
+            dest_buf[i] = g_tcm_spi_rx_buff[i];
     }
     }
 
@@ -144,7 +135,7 @@ int sendCommand(uint8_t *cmd_frame, int cmd_size, uint8_t *resp_buf)
 {
     printf("sendCommand Called\r\n");
     
-    uint8_t read_buf[TCM_RX_BUFF_SIZE];
+    uint8_t read_buf[TCM_SPI_BUFF_SIZE];
     
     CS_LOW;
     printf("Siezing locality...\r\n");

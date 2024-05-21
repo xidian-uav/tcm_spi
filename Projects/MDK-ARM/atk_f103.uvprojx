@@ -409,6 +409,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\stm32f1xx_it.c</FilePath>
             </File>
+            <File>
+              <FileName>trust_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\trust_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>trust_interface.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\User\trust_interface.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

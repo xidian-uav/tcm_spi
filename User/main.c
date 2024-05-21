@@ -24,13 +24,11 @@ int main(void)
   uint16_t times = 0;
 
   /* TCM相关变量 */
-  uint8_t respBuf[TCM_RX_BUFF_SIZE];
+  uint8_t respBuf[TCM_SPI_BUFF_SIZE];
   uint16_t respSize = 0;
 
-  // TPM2_STARTUP
-  uint8_t tpm2_startup[] = "\x80\x01\x00\x00\x00\x0c\x00\x00\x01\x44\x00\x00";
-
-  sendCommand(tpm2_startup, 12, respBuf);
+  // TCM_STARTUP
+  lp_tcm_startup(respBuf);
   printf("OK: ");
 
   for (i = 0; i < 10; i++)
@@ -38,7 +36,7 @@ int main(void)
     printf("%02x ", respBuf[i]);
   }
   printf("\r\n");
-
+  
   printf("tcm startup successfully!\r\n");
   printf("\r\n");
 
