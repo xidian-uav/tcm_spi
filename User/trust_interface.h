@@ -1,5 +1,6 @@
 #ifndef __TRUST_INTERFACE_H
 #define __TRUST_INTERFACE_H
+#include "./SYSTEM/sys/sys.h"
 
 
 
