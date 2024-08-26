@@ -1,48 +1,48 @@
 /**
  ****************************************************************************************************
  * @file        usmart.h
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      æ­£ç‚¹åŸå­å›¢é˜Ÿ(ALIENTEK)
  * @version     V3.5
  * @date        2020-12-20
- * @brief       USMART ´®¿Úµ÷ÊÔ×é¼ş
+ * @brief       USMART ä¸²å£è°ƒè¯•ç»„ä»¶
  *
- *              USMARTÊÇÓÉALIENTEK¿ª·¢µÄÒ»¸öÁéÇÉµÄ´®¿Úµ÷ÊÔ»¥½»×é¼ş,Í¨¹ı Ëü,Äã¿ÉÒÔÍ¨¹ı´®¿ÚÖúÊÖµ÷ÓÃ³Ì
- *              ĞòÀïÃæµÄÈÎºÎº¯Êı,²¢Ö´ĞĞ.Òò´Ë,Äã¿ÉÒÔËæÒâ¸ü¸Äº¯ÊıµÄÊäÈë²ÎÊı(Ö§³ÖÊı×Ö(10/16½øÖÆ,Ö§³Ö¸ºÊı)
- *              ¡¢×Ö·û´®¡¢º¯ÊıÈë¿ÚµØÖ·µÈ×÷Îª²ÎÊı),µ¥¸öº¯Êı×î¶àÖ§³Ö10¸öÊäÈë²ÎÊı,²¢Ö§³Öº¯Êı·µ »ØÖµÏÔÊ¾.
- *              V2.1°æ±¾ÒÔºóĞÂÔöhexºÍdecÁ½¸öÖ¸Áî.ËûÃÇ¿ÉÒÔÓÃÓÚÉèÖÃº¯Êı²ÎÊıµÄÏÔÊ¾¸ñÊ½.Ò²¿ÉÒÔÓÃÓÚÊı¾İµÄ½ø
- *              ÖÆ×ª»»,ÀıÈç:
- *              ÊäÈë"hex 100"  »áÔÚ´®¿Úµ÷ÊÔÖúÊÖÉÏ¿´µ½ HEX 0X64.
- *              ÊäÈë"dec 0X64" »áÔÚ´®¿Úµ÷ÊÔÖúÊÖÉÏ¿´µ½ DEC 100.
+ *              USMARTæ˜¯ç”±ALIENTEKå¼€å‘çš„ä¸€ä¸ªçµå·§çš„ä¸²å£è°ƒè¯•äº’äº¤ç»„ä»¶,é€šè¿‡ å®ƒ,ä½ å¯ä»¥é€šè¿‡ä¸²å£åŠ©æ‰‹è°ƒç”¨ç¨‹
+ *              åºé‡Œé¢çš„ä»»ä½•å‡½æ•°,å¹¶æ‰§è¡Œ.å› æ­¤,ä½ å¯ä»¥éšæ„æ›´æ”¹å‡½æ•°çš„è¾“å…¥å‚æ•°(æ”¯æŒæ•°å­—(10/16è¿›åˆ¶,æ”¯æŒè´Ÿæ•°)
+ *              ã€å­—ç¬¦ä¸²ã€å‡½æ•°å…¥å£åœ°å€ç­‰ä½œä¸ºå‚æ•°),å•ä¸ªå‡½æ•°æœ€å¤šæ”¯æŒ10ä¸ªè¾“å…¥å‚æ•°,å¹¶æ”¯æŒå‡½æ•°è¿” å›å€¼æ˜¾ç¤º.
+ *              V2.1ç‰ˆæœ¬ä»¥åæ–°å¢hexå’Œdecä¸¤ä¸ªæŒ‡ä»¤.ä»–ä»¬å¯ä»¥ç”¨äºè®¾ç½®å‡½æ•°å‚æ•°çš„æ˜¾ç¤ºæ ¼å¼.ä¹Ÿå¯ä»¥ç”¨äºæ•°æ®çš„è¿›
+ *              åˆ¶è½¬æ¢,ä¾‹å¦‚:
+ *              è¾“å…¥"hex 100"  ä¼šåœ¨ä¸²å£è°ƒè¯•åŠ©æ‰‹ä¸Šçœ‹åˆ° HEX 0X64.
+ *              è¾“å…¥"dec 0X64" ä¼šåœ¨ä¸²å£è°ƒè¯•åŠ©æ‰‹ä¸Šçœ‹åˆ° DEC 100.
  *   @note
- *              USMART×ÊÔ´Õ¼ÓÃÇé¿ö@MDK 3.80A@2.0°æ±¾£º
- *              FLASH:4K~K×Ö½Ú(Í¨¹ıUSMART_USE_HELPºÍUSMART_USE_WRFUNSÉèÖÃ)
- *              SRAM:72×Ö½Ú(×îÉÙµÄÇé¿öÏÂ)
- *              SRAM¼ÆËã¹«Ê½:   SRAM=PARM_LEN+72-4  ÆäÖĞPARM_LEN±ØĞë´óÓÚµÈÓÚ4.
- *              Ó¦¸Ã±£Ö¤¶ÑÕ»²»Ğ¡ÓÚ100¸ö×Ö½Ú.
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+ *              USMARTèµ„æºå ç”¨æƒ…å†µ@MDK 3.80A@2.0ç‰ˆæœ¬ï¼š
+ *              FLASH:4K~Kå­—èŠ‚(é€šè¿‡USMART_USE_HELPå’ŒUSMART_USE_WRFUNSè®¾ç½®)
+ *              SRAM:72å­—èŠ‚(æœ€å°‘çš„æƒ…å†µä¸‹)
+ *              SRAMè®¡ç®—å…¬å¼:   SRAM=PARM_LEN+72-4  å…¶ä¸­PARM_LENå¿…é¡»å¤§äºç­‰äº4.
+ *              åº”è¯¥ä¿è¯å †æ ˆä¸å°äº100ä¸ªå­—èŠ‚.
+ * @license     Copyright (c) 2020-2032, å¹¿å·å¸‚æ˜Ÿç¿¼ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
  ****************************************************************************************************
  * @attention
  * 
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * åœ¨çº¿è§†é¢‘:www.yuanzige.com
+ * æŠ€æœ¯è®ºå›:www.openedv.com
+ * å…¬å¸ç½‘å€:www.alientek.com
+ * è´­ä¹°åœ°å€:openedv.taobao.com
  *
- * ĞŞ¸ÄËµÃ÷ 
+ * ä¿®æ”¹è¯´æ˜ 
  * 
- * V3.4Ö®Ç°°æ±¾ÏêÏ¸ĞŞ¸ÄËµÃ÷¼ûUSMARTÎÄ¼ş¼ĞÏÂµÄ:readme.txt
+ * V3.4ä¹‹å‰ç‰ˆæœ¬è¯¦ç»†ä¿®æ”¹è¯´æ˜è§USMARTæ–‡ä»¶å¤¹ä¸‹çš„:readme.txt
  * 
  * V3.4 20200324
- * 1, ĞÂÔöusmart_port.cºÍusmart_port.h,ÓÃÓÚ¹ÜÀíUSMARTµÄÒÆÖ²,·½±ãĞŞ¸Ä
- * 2, ĞŞ¸Ä±äÁ¿ÃüÃû·½Ê½Îª: uint8_t, uint16_t, uint32_t
- * 3, ĞŞ¸Äusmart_reset_runtimeÎªusmart_timx_reset_time
- * 4, ĞŞ¸Äusmart_get_runtimeÎªusmart_timx_get_time
- * 5, ĞŞ¸Äusmart_scanº¯ÊıÊµÏÖ·½Ê½,¸Ä³ÉÓÉusmart_get_input_string»ñÈ¡Êı¾İÁ÷
- * 6, ĞŞ¸Äprintfº¯ÊıÎªUSMART_PRINTFºê¶¨Òå
- * 7, ĞŞ¸Ä¶¨Ê±É¨ÃèÏà¹Øº¯Êı,¸ÄÓÃºê¶¨Òå·½Ê½,·½±ãÒÆÖ²
+ * 1, æ–°å¢usmart_port.cå’Œusmart_port.h,ç”¨äºç®¡ç†USMARTçš„ç§»æ¤,æ–¹ä¾¿ä¿®æ”¹
+ * 2, ä¿®æ”¹å˜é‡å‘½åæ–¹å¼ä¸º: uint8_t, uint16_t, uint32_t
+ * 3, ä¿®æ”¹usmart_reset_runtimeä¸ºusmart_timx_reset_time
+ * 4, ä¿®æ”¹usmart_get_runtimeä¸ºusmart_timx_get_time
+ * 5, ä¿®æ”¹usmart_scanå‡½æ•°å®ç°æ–¹å¼,æ”¹æˆç”±usmart_get_input_stringè·å–æ•°æ®æµ
+ * 6, ä¿®æ”¹printfå‡½æ•°ä¸ºUSMART_PRINTFå®å®šä¹‰
+ * 7, ä¿®æ”¹å®šæ—¶æ‰«æç›¸å…³å‡½æ•°,æ”¹ç”¨å®å®šä¹‰æ–¹å¼,æ–¹ä¾¿ç§»æ¤
  *
  * V3.5 20201220
- * 1£¬ĞŞ¸Ä²¿·Ö´úÂëÒÔÖ§³ÖAC6±àÒëÆ÷
+ * 1ï¼Œä¿®æ”¹éƒ¨åˆ†ä»£ç ä»¥æ”¯æŒAC6ç¼–è¯‘å™¨
  ****************************************************************************************************
  */
 
@@ -52,53 +52,53 @@
 #include "./USMART/usmart_port.h"
 
 
-#define USMART_OK               0       /* ÎŞ´íÎó */
-#define USMART_FUNCERR          1       /* º¯Êı´íÎó */
-#define USMART_PARMERR          2       /* ²ÎÊı´íÎó */
-#define USMART_PARMOVER         3       /* ²ÎÊıÒç³ö */
-#define USMART_NOFUNCFIND       4       /* Î´ÕÒµ½Æ¥Åäº¯Êı */
+#define USMART_OK               0       /* æ— é”™è¯¯ */
+#define USMART_FUNCERR          1       /* å‡½æ•°é”™è¯¯ */
+#define USMART_PARMERR          2       /* å‚æ•°é”™è¯¯ */
+#define USMART_PARMOVER         3       /* å‚æ•°æº¢å‡º */
+#define USMART_NOFUNCFIND       4       /* æœªæ‰¾åˆ°åŒ¹é…å‡½æ•° */
 
-#define SP_TYPE_DEC             0       /* 10½øÖÆ²ÎÊıÏÔÊ¾ */
-#define SP_TYPE_HEX             1       /* 16½øÖÆ²ÎÊıÏÔÊ¾ */
+#define SP_TYPE_DEC             0       /* 10è¿›åˆ¶å‚æ•°æ˜¾ç¤º */
+#define SP_TYPE_HEX             1       /* 16è¿›åˆ¶å‚æ•°æ˜¾ç¤º */
 
 
-/* º¯ÊıÃûÁĞ±í */
+/* å‡½æ•°ååˆ—è¡¨ */
 struct _m_usmart_nametab
 {
-    void *func;             /* º¯ÊıÖ¸Õë */
-    const char *name;       /* º¯ÊıÃû(²éÕÒ´®) */
+    void *func;             /* å‡½æ•°æŒ‡é’ˆ */
+    const char *name;       /* å‡½æ•°å(æŸ¥æ‰¾ä¸²) */
 };
 
-/* usmart¿ØÖÆ¹ÜÀíÆ÷ */
+/* usmartæ§åˆ¶ç®¡ç†å™¨ */
 struct _m_usmart_dev
 {
-    struct _m_usmart_nametab *funs;     /* º¯ÊıÃûÖ¸Õë */
+    struct _m_usmart_nametab *funs;     /* å‡½æ•°åæŒ‡é’ˆ */
 
-    void (*init)(uint16_t tclk);        /* ³õÊ¼»¯ */
-    uint8_t (*cmd_rec)(char *str);   /* Ê¶±ğº¯ÊıÃû¼°²ÎÊı */
-    void (*exe)(void);                  /* Ö´ĞĞ  */
-    void (*scan)(void);                 /* É¨Ãè */
-    uint8_t fnum;                       /* º¯ÊıÊıÁ¿ */
-    uint8_t pnum;                       /* ²ÎÊıÊıÁ¿ */
-    uint8_t id;                         /* º¯Êıid */
-    uint8_t sptype;                     /* ²ÎÊıÏÔÊ¾ÀàĞÍ(·Ç×Ö·û´®²ÎÊı):0,10½øÖÆ;1,16½øÖÆ; */
-    uint16_t parmtype;                  /* ²ÎÊıµÄÀàĞÍ */
-    uint8_t  plentbl[MAX_PARM];         /* Ã¿¸ö²ÎÊıµÄ³¤¶ÈÔİ´æ±í */
-    uint8_t  parm[PARM_LEN];            /* º¯ÊıµÄ²ÎÊı */
-    uint8_t runtimeflag;                /* 0,²»Í³¼Æº¯ÊıÖ´ĞĞÊ±¼ä;1,Í³¼Æº¯ÊıÖ´ĞĞÊ±¼ä,×¢Òâ:´Ë¹¦ÄÜ±ØĞëÔÚUSMART_ENTIMX_SCANÊ¹ÄÜµÄÊ±ºò,²ÅÓĞÓÃ */
-    uint32_t runtime;                   /* ÔËĞĞÊ±¼ä,µ¥Î»:0.1ms,×î´óÑÓÊ±Ê±¼äÎª¶¨Ê±Æ÷CNTÖµµÄ2±¶*0.1ms */
+    void (*init)(uint16_t tclk);        /* åˆå§‹åŒ– */
+    uint8_t (*cmd_rec)(char *str);   /* è¯†åˆ«å‡½æ•°ååŠå‚æ•° */
+    void (*exe)(void);                  /* æ‰§è¡Œ  */
+    void (*scan)(void);                 /* æ‰«æ */
+    uint8_t fnum;                       /* å‡½æ•°æ•°é‡ */
+    uint8_t pnum;                       /* å‚æ•°æ•°é‡ */
+    uint8_t id;                         /* å‡½æ•°id */
+    uint8_t sptype;                     /* å‚æ•°æ˜¾ç¤ºç±»å‹(éå­—ç¬¦ä¸²å‚æ•°):0,10è¿›åˆ¶;1,16è¿›åˆ¶; */
+    uint16_t parmtype;                  /* å‚æ•°çš„ç±»å‹ */
+    uint8_t  plentbl[MAX_PARM];         /* æ¯ä¸ªå‚æ•°çš„é•¿åº¦æš‚å­˜è¡¨ */
+    uint8_t  parm[PARM_LEN];            /* å‡½æ•°çš„å‚æ•° */
+    uint8_t runtimeflag;                /* 0,ä¸ç»Ÿè®¡å‡½æ•°æ‰§è¡Œæ—¶é—´;1,ç»Ÿè®¡å‡½æ•°æ‰§è¡Œæ—¶é—´,æ³¨æ„:æ­¤åŠŸèƒ½å¿…é¡»åœ¨USMART_ENTIMX_SCANä½¿èƒ½çš„æ—¶å€™,æ‰æœ‰ç”¨ */
+    uint32_t runtime;                   /* è¿è¡Œæ—¶é—´,å•ä½:0.1ms,æœ€å¤§å»¶æ—¶æ—¶é—´ä¸ºå®šæ—¶å™¨CNTå€¼çš„2å€*0.1ms */
 };
 
-extern struct _m_usmart_nametab usmart_nametab[];   /* ÔÚusmart_config.cÀïÃæ¶¨Òå */
-extern struct _m_usmart_dev usmart_dev;             /* ÔÚusmart_config.cÀïÃæ¶¨Òå */
+extern struct _m_usmart_nametab usmart_nametab[];   /* åœ¨usmart_config.cé‡Œé¢å®šä¹‰ */
+extern struct _m_usmart_dev usmart_dev;             /* åœ¨usmart_config.cé‡Œé¢å®šä¹‰ */
 
 
-void usmart_init(uint16_t tclk);        /* ³õÊ¼»¯ */
-uint8_t usmart_cmd_rec(char*str);    	/* Ê¶±ğ */
-void usmart_exe(void);                  /* Ö´ĞĞ */
-void usmart_scan(void);                 /* É¨Ãè */
-uint32_t read_addr(uint32_t addr);      /* ¶ÁÈ¡Ö¸¶¨µØÖ·µÄÖµ */
-void write_addr(uint32_t addr,uint32_t val);/* ÔÚÖ¸¶¨µØÖ·Ğ´ÈëÖ¸¶¨µÄÖµ */
+void usmart_init(uint16_t tclk);        /* åˆå§‹åŒ– */
+uint8_t usmart_cmd_rec(char*str);    	/* è¯†åˆ« */
+void usmart_exe(void);                  /* æ‰§è¡Œ */
+void usmart_scan(void);                 /* æ‰«æ */
+uint32_t read_addr(uint32_t addr);      /* è¯»å–æŒ‡å®šåœ°å€çš„å€¼ */
+void write_addr(uint32_t addr,uint32_t val);/* åœ¨æŒ‡å®šåœ°å€å†™å…¥æŒ‡å®šçš„å€¼ */
 
 #endif
 

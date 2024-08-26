@@ -1,56 +1,72 @@
-/**
- ****************************************************************************************************
- * @file        spi.h
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
- * @version     V1.0
- * @date        2020-04-24
- * @brief       SPI Çı¶¯´úÂë
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
- ****************************************************************************************************
- * @attention
- *
- * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó STM32F103¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
- *
- * ĞŞ¸ÄËµÃ÷
- * V1.0 20200424
- * µÚÒ»´Î·¢²¼
- *
- ****************************************************************************************************
- */
-
 #ifndef __SPI_H
 #define __SPI_H
 
 #include "./SYSTEM/sys/sys.h"
 
+/******************************************************************************************/
+/* SPI1 å¼•è„š å®šä¹‰ */
+
+#define SPI1_SCK_GPIO_PORT              GPIOA
+#define SPI1_SCK_GPIO_PIN               GPIO_PIN_5
+#define SPI1_SCK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PAå£æ—¶é’Ÿä½¿èƒ½ */
+
+#define SPI1_MISO_GPIO_PORT             GPIOA
+#define SPI1_MISO_GPIO_PIN              GPIO_PIN_6
+#define SPI1_MISO_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PAå£æ—¶é’Ÿä½¿èƒ½ */
+
+#define SPI1_MOSI_GPIO_PORT             GPIOA
+#define SPI1_MOSI_GPIO_PIN              GPIO_PIN_7
+#define SPI1_MOSI_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PAå£æ—¶é’Ÿä½¿èƒ½ */
+
+/* SPI1ç›¸å…³å®šä¹‰ */
+#define SPI1_SPI_CLK_ENABLE()           do{ __HAL_RCC_SPI1_CLK_ENABLE(); }while(0)    /* SPI1æ—¶é’Ÿä½¿èƒ½ */
 
 /******************************************************************************************/
-/* SPI2 Òı½Å ¶¨Òå */
+
+
+/******************************************************************************************/
+/* SPI2 å¼•è„š å®šä¹‰ */
 
 #define SPI2_SCK_GPIO_PORT              GPIOB
 #define SPI2_SCK_GPIO_PIN               GPIO_PIN_13
-#define SPI2_SCK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PB¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define SPI2_SCK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define SPI2_MISO_GPIO_PORT             GPIOB
 #define SPI2_MISO_GPIO_PIN              GPIO_PIN_14
-#define SPI2_MISO_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PB¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define SPI2_MISO_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define SPI2_MOSI_GPIO_PORT             GPIOB
 #define SPI2_MOSI_GPIO_PIN              GPIO_PIN_15
-#define SPI2_MOSI_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PB¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define SPI2_MOSI_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
 
-/* SPI2Ïà¹Ø¶¨Òå */
-#define SPI2_SPI                        SPI2
-#define SPI2_SPI_CLK_ENABLE()           do{ __HAL_RCC_SPI2_CLK_ENABLE(); }while(0)    /* SPI2Ê±ÖÓÊ¹ÄÜ */
+/* SPI2ç›¸å…³å®šä¹‰ */
+#define SPI2_SPI_CLK_ENABLE()           do{ __HAL_RCC_SPI2_CLK_ENABLE(); }while(0)    /* SPI2æ—¶é’Ÿä½¿èƒ½ */
 
 /******************************************************************************************/
 
 
-/* SPI×ÜÏßËÙ¶ÈÉèÖÃ */
+/******************************************************************************************/
+/* SPI3 å¼•è„š å®šä¹‰ */
+
+#define SPI3_SCK_GPIO_PORT              GPIOB
+#define SPI3_SCK_GPIO_PIN               GPIO_PIN_3
+#define SPI3_SCK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
+
+#define SPI3_MISO_GPIO_PORT             GPIOB
+#define SPI3_MISO_GPIO_PIN              GPIO_PIN_4
+#define SPI3_MISO_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
+
+#define SPI3_MOSI_GPIO_PORT             GPIOB
+#define SPI3_MOSI_GPIO_PIN              GPIO_PIN_5
+#define SPI3_MOSI_GPIO_CLK_ENABLE()     do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)   /* PBå£æ—¶é’Ÿä½¿èƒ½ */
+
+/* SPI3ç›¸å…³å®šä¹‰ */
+#define SPI3_SPI_CLK_ENABLE()           do{ __HAL_RCC_SPI3_CLK_ENABLE(); }while(0)    /* SPI3æ—¶é’Ÿä½¿èƒ½ */
+
+/******************************************************************************************/
+
+
+/* SPIæ€»çº¿é€Ÿåº¦è®¾ç½® */
 #define SPI_SPEED_2         0
 #define SPI_SPEED_4         1
 #define SPI_SPEED_8         2
@@ -61,10 +77,12 @@
 #define SPI_SPEED_256       7
 
 
-void spi2_init(void);
-void spi2_set_speed(uint8_t speed);
-uint8_t spi2_read_write_byte(uint8_t txdata);
+#define SPI_RX_BUFFER_SIZE 256         /* SPIæ¥æ”¶å¤šä¸ªå­—èŠ‚æ—¶çš„ç¼“å†²åŒºå¤§å° */
 
+void spi_init(SPI_HandleTypeDef* hspi);
+void spi_set_speed(SPI_HandleTypeDef* hspi, uint8_t speed);
+uint8_t spi_read_write_byte(SPI_HandleTypeDef* hspi, uint8_t tx_data);
+void spi_read_write_data(SPI_HandleTypeDef* hspi, uint8_t* tx_data, uint16_t tx_data_size, uint8_t* rx_data_buff);
 #endif
 
 

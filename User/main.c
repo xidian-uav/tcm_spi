@@ -1,83 +1,131 @@
+#include "./stm32f1xx_it.h"
 #include "./SYSTEM/sys/sys.h"
 #include "./SYSTEM/usart/usart.h"
 #include "./SYSTEM/delay/delay.h"
-#include "./USMART/usmart.h"
 #include "./BSP/LED/led.h"
-#include "./BSP/LCD/lcd.h"
-#include "./BSP/KEY/key.h"
-#include "./BSP/NORFLASH/norflash.h"
-
-/* ÒªĞ´Èëµ½FLASHµÄ×Ö·û´®Êı×é */
-const uint8_t g_text_buf[] = {"STM32 SPI TEST"};
-
-#define TEXT_SIZE sizeof(g_text_buf) /* TEXT×Ö·û´®³¤¶È */
+#include "./BSP/TCM/tcm.h"
+#include "./trust_interface.h"
 
 int main(void)
 {
-    uint8_t key;
-    uint16_t i = 0;
-    uint8_t datatemp[TEXT_SIZE];
-    uint32_t flashsize;
-    uint16_t id = 0;
+  HAL_Init();                         /* åˆå§‹åŒ–HALåº“ */
+  sys_stm32_clock_init(RCC_PLL_MUL9); /* è®¾ç½®æ—¶é’Ÿä¸º72Mhz */
+  delay_init(72);                     /* å»¶æ—¶åˆå§‹åŒ– */
+  usart_init(115200);                 /* ä¸²å£åˆå§‹åŒ–ä¸º115200 */
+  led_init();                         /* åˆå§‹åŒ–LED */
+  tcm_init();                         /* åˆå§‹åŒ–TCM */
 
-    HAL_Init();                         /* ³õÊ¼»¯HAL¿â */
-    sys_stm32_clock_init(RCC_PLL_MUL9); /* ÉèÖÃÊ±ÖÓ, 72Mhz */
-    delay_init(72);                     /* ÑÓÊ±³õÊ¼»¯ */
-    usart_init(115200);                 /* ´®¿Ú³õÊ¼»¯Îª115200 */
-    usmart_dev.init(72);                /* ³õÊ¼»¯USMART */
-    led_init();                         /* ³õÊ¼»¯LED */
-    lcd_init();                         /* ³õÊ¼»¯LCD */
-    key_init();                         /* ³õÊ¼»¯°´¼ü */
-    norflash_init();                    /* ³õÊ¼»¯NORFLASH */
+  printf("Waiting...\r\n");
 
-    lcd_show_string(30,  50, 200, 16, 16, "STM32", RED);
-    lcd_show_string(30,  70, 200, 16, 16, "SPI TEST", RED);
-    lcd_show_string(30,  90, 200, 16, 16, "ATOM@ALIENTEK", RED);
-    lcd_show_string(30, 110, 200, 16, 16, "KEY1:Write  KEY0:Read", RED); /* ÏÔÊ¾ÌáÊ¾ĞÅÏ¢ */
+  uint16_t i;
 
-    id = norflash_read_id(); /* ¶ÁÈ¡FLASH ID */
+  /* USART ç›¸å…³å˜é‡ */
+  uint8_t len;
+  uint16_t times = 0;
 
-    while ((id == 0) || (id == 0XFFFF)) /* ¼ì²â²»µ½FLASHĞ¾Æ¬ */
-    {
-        lcd_show_string(30, 130, 200, 16, 16, "FLASH Check Failed!", RED);
-        delay_ms(500);
-        lcd_show_string(30, 130, 200, 16, 16, "Please Check!      ", RED);
-        delay_ms(500);
-        LED0_TOGGLE(); /* LED0ÉÁË¸ */
-    }
+  /* TCMç›¸å…³å˜é‡ */
+  uint8_t respBuf[TCM_SPI_BUFF_SIZE];
+  uint16_t respSize = 0;
 
-    lcd_show_string(30, 130, 200, 16, 16, "SPI FLASH Ready!", BLUE);
-    flashsize = 16 * 1024 * 1024; /* FLASH ´óĞ¡Îª16M×Ö½Ú */
+  // TCM_STARTUP
+  lp_tcm_startup(respBuf);
+  printf("OK: ");
 
-    while (1)
-    {
-        key = key_scan(0);
+  for (i = 0; i < 10; i++)
+  {
+    printf("%02x ", respBuf[i]);
+  }
+  printf("\r\n");
+  
+  printf("tcm startup successfully!\r\n");
+  printf("\r\n");
 
-        if (key == KEY1_PRES) /* KEY1°´ÏÂ,Ğ´Èë */
-        {
-            lcd_fill(0, 150, 239, 319, WHITE); /* Çå³ı°ëÆÁ */
-            lcd_show_string(30, 150, 200, 16, 16, "Start Write FLASH....", BLUE);
-            sprintf((char *)datatemp, "%s%d", (char *)g_text_buf, i);
-            norflash_write((uint8_t *)datatemp, flashsize - 100, TEXT_SIZE);      /* ´Óµ¹ÊıµÚ100¸öµØÖ·´¦¿ªÊ¼,Ğ´ÈëSIZE³¤¶ÈµÄÊı¾İ */
-            lcd_show_string(30, 150, 200, 16, 16, "FLASH Write Finished!", BLUE); /* ÌáÊ¾´«ËÍÍê³É */
-        }
+  uint8_t data[] = "\x01\x02";
+  respSize = lp_tcm_hash_sm3(data, 2, respBuf);
+  printf("OK: ");
+  for (i = 0; i < respSize; i++)
+  {
+    printf("%02x ", respBuf[i]);
+  }
+  printf("\r\n");
 
-        if (key == KEY0_PRES) /* KEY0°´ÏÂ,¶ÁÈ¡×Ö·û´®²¢ÏÔÊ¾ */
-        {
-            lcd_show_string(30, 150, 200, 16, 16, "Start Read FLASH... . ", BLUE);
-            norflash_read(datatemp, flashsize - 100, TEXT_SIZE);                   /* ´Óµ¹ÊıµÚ100¸öµØÖ·´¦¿ªÊ¼,¶Á³öSIZE¸ö×Ö½Ú */
-            lcd_show_string(30, 150, 200, 16, 16, "The Data Readed Is:   ", BLUE); /* ÌáÊ¾´«ËÍÍê³É */
-            lcd_show_string(30, 170, 200, 16, 16, (char *)datatemp, BLUE);         /* ÏÔÊ¾¶Áµ½µÄ×Ö·û´® */
-        }
+  printf("tcm hash successfully!\r\n");
+  printf("\r\n");
 
-        i++;
+  /*
+  //TPM2_CLEAR
+  uint8_t tpm2_clear[] = "\x80\x02\x00\x00\x00\x1b\x00\x00\x01\x26\x40\x00\x00\x0c\x00\x00\x00\x09\x40\x00\x00\x09\x00\x00\x00\x00\x00";
+  respSize = sendCommand(tpm2_clear, 27, respBuf);
 
-        if (i == 20)
-        {
-            LED0_TOGGLE(); /* LED0ÉÁË¸ */
-            i = 0;
-        }
+  printf("OK: ");
+  for(i = 0; i < respSize; i++ )
+  {
+    printf("%02x ", respBuf[i]);
+  }
+  printf("tcm clear successfully!\r\n");
+  printf("\r\n");
+  */
 
-        delay_ms(10);
-    }
+  /*
+  // TPM2_GETRANDOM
+  uint8_t tpm2_getrandom[] = "\x80\x01\x00\x00\x00\x0c\x00\x00\x01\x7b\x00\x10";
+  respSize = sendCommand(tpm2_getrandom, 12, respBuf);
+
+  printf("OK: ");
+  for(i = 0; i < respSize; i++ )
+  {
+    printf("%02x ", respBuf[i]);
+  }
+  printf("tcm getrandom successfully!\r\n");
+  printf("\r\n");
+
+
+  // TPM2_HASH
+  uint8_t tpm2_gethash_sm3_256[] = "\x80\x01\x00\x00\x00\x20\x00\x00\x01\x7d\x00\x0e\x99\x4a\xf6\xb3\xa5\x7d\x4d\x85\xd6\xc1\xe8\xfd\xba\xcf\x00\x0b\x40\x00\x00\x01";
+  respSize = sendCommand(tpm2_gethash_sm3_256, 32, respBuf);
+
+  printf("OK: ");
+  for(i = 0; i < respSize; i++)
+  {
+    printf("%02x ", respBuf[i]);
+  }
+  printf("\r\n");
+
+  printf("tcm hash successfully!\r\n");
+  */
+
+  // while (1)
+  // {
+  //     if (g_usart_rx_sta & 0x8000)        /* æ¥æ”¶åˆ°äº†æ•°æ®? */
+  //     {
+  //         len = g_usart_rx_sta & 0x3fff;  /* å¾—åˆ°æ­¤æ¬¡æ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦ */
+  //         printf("\r\næ‚¨å‘é€çš„æ¶ˆæ¯ä¸º:\r\n");
+
+  //         HAL_UART_Transmit(&g_uart1_handle,(uint8_t*)g_usart_rx_buf, len, 1000);    /* å‘é€æ¥æ”¶åˆ°çš„æ•°æ® */
+  //         while(__HAL_UART_GET_FLAG(&g_uart1_handle,UART_FLAG_TC) != SET);           /* ç­‰å¾…å‘é€ç»“æŸ */
+
+  //         printf("\r\n\r\n");             /* æ’å…¥æ¢è¡Œ */
+  //         g_usart_rx_sta = 0;
+  //     }
+  //     else
+  //     {
+  //         times++;
+
+  //         if (times % 5000 == 0)
+  //         {
+  //             printf("\r\næ­£ç‚¹åŸå­ STM32å¼€å‘æ¿ ä¸²å£å®éªŒ\r\n");
+  //             printf("æ­£ç‚¹åŸå­@ALIENTEK\r\n\r\n\r\n");
+  //         }
+
+  //         if (times % 200 == 0)
+  //         {
+  //             printf("è¯·è¾“å…¥æ•°æ®,ä»¥å›è½¦é”®ç»“æŸ\r\n");
+  //             HAL_UART_Transmit(&g_uart1_handle, data, sizeof(data) - 1, 1000);    /* å‘é€æ¥æ”¶åˆ°çš„æ•°æ® */
+  //             while(__HAL_UART_GET_FLAG(&g_uart1_handle,UART_FLAG_TC) != SET);     /* ç­‰å¾…å‘é€ç»“æŸ */
+  //         }
+  //         if (times % 30  == 0) LED0_TOGGLE(); /* é—ªçƒLED,æç¤ºç³»ç»Ÿæ­£åœ¨è¿è¡Œ. */
+
+  //         delay_ms(10);
+  //     }
+  // }
 }

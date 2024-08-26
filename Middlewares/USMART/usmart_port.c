@@ -1,43 +1,43 @@
 /**
  ****************************************************************************************************
  * @file        usmart_port.c
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      æ­£ç‚¹åŸå­å›¢é˜Ÿ(ALIENTEK)
  * @version     V3.5
  * @date        2020-12-20
- * @brief       USMART ÒÆÖ²ÎÄ¼ş
+ * @brief       USMART ç§»æ¤æ–‡ä»¶
  *
- *              Í¨¹ıĞŞ¸Ä¸ÃÎÄ¼ş,¿ÉÒÔ·½±ãµÄ½«USMARTÒÆÖ²µ½ÆäËû¹¤³Ì
- *              µ±:USMART_ENTIMX_SCAN == 0Ê±,½öĞèÒªÊµÏÖ: usmart_get_input_stringº¯Êı.
- *              µ±:USMART_ENTIMX_SCAN == 1Ê±,ĞèÒª¶àÊµÏÖ4¸öº¯Êı:
+ *              é€šè¿‡ä¿®æ”¹è¯¥æ–‡ä»¶,å¯ä»¥æ–¹ä¾¿çš„å°†USMARTç§»æ¤åˆ°å…¶ä»–å·¥ç¨‹
+ *              å½“:USMART_ENTIMX_SCAN == 0æ—¶,ä»…éœ€è¦å®ç°: usmart_get_input_stringå‡½æ•°.
+ *              å½“:USMART_ENTIMX_SCAN == 1æ—¶,éœ€è¦å¤šå®ç°4ä¸ªå‡½æ•°:
  *              usmart_timx_reset_time
  *              usmart_timx_get_time
  *              usmart_timx_init
  *              USMART_TIMX_IRQHandler
  *
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+ * @license     Copyright (c) 2020-2032, å¹¿å·å¸‚æ˜Ÿç¿¼ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
  ****************************************************************************************************
  * @attention
  *
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * åœ¨çº¿è§†é¢‘:www.yuanzige.com
+ * æŠ€æœ¯è®ºå›:www.openedv.com
+ * å…¬å¸ç½‘å€:www.alientek.com
+ * è´­ä¹°åœ°å€:openedv.taobao.com
  *
- * ĞŞ¸ÄËµÃ÷
+ * ä¿®æ”¹è¯´æ˜
  *
- * V3.4Ö®Ç°°æ±¾ÏêÏ¸ĞŞ¸ÄËµÃ÷¼ûUSMARTÎÄ¼ş¼ĞÏÂµÄ:readme.txt
+ * V3.4ä¹‹å‰ç‰ˆæœ¬è¯¦ç»†ä¿®æ”¹è¯´æ˜è§USMARTæ–‡ä»¶å¤¹ä¸‹çš„:readme.txt
  *
  * V3.4 20200324
- * 1, ĞÂÔöusmart_port.cºÍusmart_port.h,ÓÃÓÚ¹ÜÀíUSMARTµÄÒÆÖ²,·½±ãĞŞ¸Ä
- * 2, ĞŞ¸Ä±äÁ¿ÃüÃû·½Ê½Îª: uint8_t, uint16_t, uint32_t
- * 3, ĞŞ¸Äusmart_reset_runtimeÎªusmart_timx_reset_time
- * 4, ĞŞ¸Äusmart_get_runtimeÎªusmart_timx_get_time
- * 5, ĞŞ¸Äusmart_scanº¯ÊıÊµÏÖ·½Ê½,¸Ä³ÉÓÉusmart_get_input_string»ñÈ¡Êı¾İÁ÷
- * 6, ĞŞ¸Äprintfº¯ÊıÎªUSMART_PRINTFºê¶¨Òå
- * 7, ĞŞ¸Ä¶¨Ê±É¨ÃèÏà¹Øº¯Êı,¸ÄÓÃºê¶¨Òå·½Ê½,·½±ãÒÆÖ²
+ * 1, æ–°å¢usmart_port.cå’Œusmart_port.h,ç”¨äºç®¡ç†USMARTçš„ç§»æ¤,æ–¹ä¾¿ä¿®æ”¹
+ * 2, ä¿®æ”¹å˜é‡å‘½åæ–¹å¼ä¸º: uint8_t, uint16_t, uint32_t
+ * 3, ä¿®æ”¹usmart_reset_runtimeä¸ºusmart_timx_reset_time
+ * 4, ä¿®æ”¹usmart_get_runtimeä¸ºusmart_timx_get_time
+ * 5, ä¿®æ”¹usmart_scanå‡½æ•°å®ç°æ–¹å¼,æ”¹æˆç”±usmart_get_input_stringè·å–æ•°æ®æµ
+ * 6, ä¿®æ”¹printfå‡½æ•°ä¸ºUSMART_PRINTFå®å®šä¹‰
+ * 7, ä¿®æ”¹å®šæ—¶æ‰«æç›¸å…³å‡½æ•°,æ”¹ç”¨å®å®šä¹‰æ–¹å¼,æ–¹ä¾¿ç§»æ¤
  *
  * V3.5 20201220
- * 1£¬ĞŞ¸Ä²¿·Ö´úÂëÒÔÖ§³ÖAC6±àÒëÆ÷
+ * 1ï¼Œä¿®æ”¹éƒ¨åˆ†ä»£ç ä»¥æ”¯æŒAC6ç¼–è¯‘å™¨
  *
  ****************************************************************************************************
  */
@@ -45,109 +45,109 @@
 #include "./USMART/usmart.h"
 #include "./USMART/usmart_port.h"
 
-TIM_HandleTypeDef g_timx_usmart_handle;      /* ¶¨Ê±Æ÷¾ä±ú */
+TIM_HandleTypeDef g_timx_usmart_handle;      /* å®šæ—¶å™¨å¥æŸ„ */
 
 /**
- * @brief       »ñÈ¡ÊäÈëÊı¾İÁ÷(×Ö·û´®)
- *   @note      USMARTÍ¨¹ı½âÎö¸Ãº¯Êı·µ»ØµÄ×Ö·û´®ÒÔ»ñÈ¡º¯ÊıÃû¼°²ÎÊıµÈĞÅÏ¢
- * @param       ÎŞ
+ * @brief       è·å–è¾“å…¥æ•°æ®æµ(å­—ç¬¦ä¸²)
+ *   @note      USMARTé€šè¿‡è§£æè¯¥å‡½æ•°è¿”å›çš„å­—ç¬¦ä¸²ä»¥è·å–å‡½æ•°ååŠå‚æ•°ç­‰ä¿¡æ¯
+ * @param       æ— 
  * @retval
- *   @arg       0,  Ã»ÓĞ½ÓÊÕµ½Êı¾İ
- *   @arg       ÆäËû,Êı¾İÁ÷Ê×µØÖ·(²»ÄÜÊÇ0)
+ *   @arg       0,  æ²¡æœ‰æ¥æ”¶åˆ°æ•°æ®
+ *   @arg       å…¶ä»–,æ•°æ®æµé¦–åœ°å€(ä¸èƒ½æ˜¯0)
  */
 char *usmart_get_input_string(void)
 {
     uint8_t len;
     char *pbuf = 0;
 
-    if (g_usart_rx_sta & 0x8000)        /* ´®¿Ú½ÓÊÕÍê³É£¿ */
+    if (g_usart_rx_sta & 0x8000)        /* ä¸²å£æ¥æ”¶å®Œæˆï¼Ÿ */
     {
-        len = g_usart_rx_sta & 0x3fff;  /* µÃµ½´Ë´Î½ÓÊÕµ½µÄÊı¾İ³¤¶È */
-        g_usart_rx_buf[len] = '\0';     /* ÔÚÄ©Î²¼ÓÈë½áÊø·û. */
+        len = g_usart_rx_sta & 0x3fff;  /* å¾—åˆ°æ­¤æ¬¡æ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦ */
+        g_usart_rx_buf[len] = '\0';     /* åœ¨æœ«å°¾åŠ å…¥ç»“æŸç¬¦. */
         pbuf = (char*)g_usart_rx_buf;
-        g_usart_rx_sta = 0;             /* ¿ªÆôÏÂÒ»´Î½ÓÊÕ */
+        g_usart_rx_sta = 0;             /* å¼€å¯ä¸‹ä¸€æ¬¡æ¥æ”¶ */
     }
 
     return pbuf;
 }
 
-/* Èç¹ûÊ¹ÄÜÁË¶¨Ê±Æ÷É¨Ãè, ÔòĞèÒª¶¨ÒåÈçÏÂº¯Êı */
+/* å¦‚æœä½¿èƒ½äº†å®šæ—¶å™¨æ‰«æ, åˆ™éœ€è¦å®šä¹‰å¦‚ä¸‹å‡½æ•° */
 #if USMART_ENTIMX_SCAN == 1
 
 /**
- * ÒÆÖ²×¢Òâ:±¾ÀıÊÇÒÔstm32ÎªÀı,Èç¹ûÒªÒÆÖ²µ½ÆäËûmcu,Çë×öÏàÓ¦ĞŞ¸Ä.
- * usmart_reset_runtime,Çå³ıº¯ÊıÔËĞĞÊ±¼ä,Á¬Í¬¶¨Ê±Æ÷µÄ¼ÆÊı¼Ä´æÆ÷ÒÔ¼°±êÖ¾Î»Ò»ÆğÇåÁã.²¢ÉèÖÃÖØ×°ÔØÖµÎª×î´ó,ÒÔ×î´óÏŞ¶ÈµÄÑÓ³¤¼ÆÊ±Ê±¼ä.
- * usmart_get_runtime,»ñÈ¡º¯ÊıÔËĞĞÊ±¼ä,Í¨¹ı¶ÁÈ¡CNTÖµ»ñÈ¡,ÓÉÓÚusmartÊÇÍ¨¹ıÖĞ¶Ïµ÷ÓÃµÄº¯Êı,ËùÒÔ¶¨Ê±Æ÷ÖĞ¶Ï²»ÔÙÓĞĞ§,´ËÊ±×î´óÏŞ¶È
- * Ö»ÄÜÍ³¼Æ2´ÎCNTµÄÖµ,Ò²¾ÍÊÇÇåÁãºó+Òç³öÒ»´Î,µ±Òç³ö³¬¹ı2´Î,Ã»·¨´¦Àí,ËùÒÔ×î´óÑÓÊ±,¿ØÖÆÔÚ:2*¼ÆÊıÆ÷CNT*0.1ms.¶ÔSTM32À´Ëµ,ÊÇ:13.1s×óÓÒ
- * ÆäËûµÄ:USMART_TIMX_IRQHandlerºÍTimer4_Init,ĞèÒª¸ù¾İMCUÌØµã×ÔĞĞĞŞ¸Ä.È·±£¼ÆÊıÆ÷¼ÆÊıÆµÂÊÎª:10Khz¼´¿É.ÁíÍâ,¶¨Ê±Æ÷²»Òª¿ªÆô×Ô¶¯ÖØ×°ÔØ¹¦ÄÜ!!
+ * ç§»æ¤æ³¨æ„:æœ¬ä¾‹æ˜¯ä»¥stm32ä¸ºä¾‹,å¦‚æœè¦ç§»æ¤åˆ°å…¶ä»–mcu,è¯·åšç›¸åº”ä¿®æ”¹.
+ * usmart_reset_runtime,æ¸…é™¤å‡½æ•°è¿è¡Œæ—¶é—´,è¿åŒå®šæ—¶å™¨çš„è®¡æ•°å¯„å­˜å™¨ä»¥åŠæ ‡å¿—ä½ä¸€èµ·æ¸…é›¶.å¹¶è®¾ç½®é‡è£…è½½å€¼ä¸ºæœ€å¤§,ä»¥æœ€å¤§é™åº¦çš„å»¶é•¿è®¡æ—¶æ—¶é—´.
+ * usmart_get_runtime,è·å–å‡½æ•°è¿è¡Œæ—¶é—´,é€šè¿‡è¯»å–CNTå€¼è·å–,ç”±äºusmartæ˜¯é€šè¿‡ä¸­æ–­è°ƒç”¨çš„å‡½æ•°,æ‰€ä»¥å®šæ—¶å™¨ä¸­æ–­ä¸å†æœ‰æ•ˆ,æ­¤æ—¶æœ€å¤§é™åº¦
+ * åªèƒ½ç»Ÿè®¡2æ¬¡CNTçš„å€¼,ä¹Ÿå°±æ˜¯æ¸…é›¶å+æº¢å‡ºä¸€æ¬¡,å½“æº¢å‡ºè¶…è¿‡2æ¬¡,æ²¡æ³•å¤„ç†,æ‰€ä»¥æœ€å¤§å»¶æ—¶,æ§åˆ¶åœ¨:2*è®¡æ•°å™¨CNT*0.1ms.å¯¹STM32æ¥è¯´,æ˜¯:13.1så·¦å³
+ * å…¶ä»–çš„:USMART_TIMX_IRQHandlerå’ŒTimer4_Init,éœ€è¦æ ¹æ®MCUç‰¹ç‚¹è‡ªè¡Œä¿®æ”¹.ç¡®ä¿è®¡æ•°å™¨è®¡æ•°é¢‘ç‡ä¸º:10Khzå³å¯.å¦å¤–,å®šæ—¶å™¨ä¸è¦å¼€å¯è‡ªåŠ¨é‡è£…è½½åŠŸèƒ½!!
  */
 
 /**
- * @brief       ¸´Î»runtime
- *   @note      ĞèÒª¸ù¾İËùÒÆÖ²µ½µÄMCUµÄ¶¨Ê±Æ÷²ÎÊı½øĞĞĞŞ¸Ä
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       å¤ä½runtime
+ *   @note      éœ€è¦æ ¹æ®æ‰€ç§»æ¤åˆ°çš„MCUçš„å®šæ—¶å™¨å‚æ•°è¿›è¡Œä¿®æ”¹
+ * @param       æ— 
+ * @retval      æ— 
  */
 void usmart_timx_reset_time(void)
 {
-    __HAL_TIM_CLEAR_FLAG(&g_timx_usmart_handle, TIM_FLAG_UPDATE); /* Çå³ıÖĞ¶Ï±êÖ¾Î» */
-    __HAL_TIM_SET_AUTORELOAD(&g_timx_usmart_handle, 0XFFFF);      /* ½«ÖØ×°ÔØÖµÉèÖÃµ½×î´ó */
-    __HAL_TIM_SET_COUNTER(&g_timx_usmart_handle, 0);              /* Çå¿Õ¶¨Ê±Æ÷µÄCNT */
+    __HAL_TIM_CLEAR_FLAG(&g_timx_usmart_handle, TIM_FLAG_UPDATE); /* æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½ */
+    __HAL_TIM_SET_AUTORELOAD(&g_timx_usmart_handle, 0XFFFF);      /* å°†é‡è£…è½½å€¼è®¾ç½®åˆ°æœ€å¤§ */
+    __HAL_TIM_SET_COUNTER(&g_timx_usmart_handle, 0);              /* æ¸…ç©ºå®šæ—¶å™¨çš„CNT */
     usmart_dev.runtime = 0;
 }
 
 /**
- * @brief       »ñµÃruntimeÊ±¼ä
- *   @note      ĞèÒª¸ù¾İËùÒÆÖ²µ½µÄMCUµÄ¶¨Ê±Æ÷²ÎÊı½øĞĞĞŞ¸Ä
- * @param       ÎŞ
- * @retval      Ö´ĞĞÊ±¼ä,µ¥Î»:0.1ms,×î´óÑÓÊ±Ê±¼äÎª¶¨Ê±Æ÷CNTÖµµÄ2±¶*0.1ms
+ * @brief       è·å¾—runtimeæ—¶é—´
+ *   @note      éœ€è¦æ ¹æ®æ‰€ç§»æ¤åˆ°çš„MCUçš„å®šæ—¶å™¨å‚æ•°è¿›è¡Œä¿®æ”¹
+ * @param       æ— 
+ * @retval      æ‰§è¡Œæ—¶é—´,å•ä½:0.1ms,æœ€å¤§å»¶æ—¶æ—¶é—´ä¸ºå®šæ—¶å™¨CNTå€¼çš„2å€*0.1ms
  */
 uint32_t usmart_timx_get_time(void)
 {
-    if (__HAL_TIM_GET_FLAG(&g_timx_usmart_handle, TIM_FLAG_UPDATE) == SET)  /* ÔÚÔËĞĞÆÚ¼ä,²úÉúÁË¶¨Ê±Æ÷Òç³ö */
+    if (__HAL_TIM_GET_FLAG(&g_timx_usmart_handle, TIM_FLAG_UPDATE) == SET)  /* åœ¨è¿è¡ŒæœŸé—´,äº§ç”Ÿäº†å®šæ—¶å™¨æº¢å‡º */
     {
         usmart_dev.runtime += 0XFFFF;
     }
     usmart_dev.runtime += __HAL_TIM_GET_COUNTER(&g_timx_usmart_handle);
-    return usmart_dev.runtime;                                 /* ·µ»Ø¼ÆÊıÖµ */
+    return usmart_dev.runtime;                                 /* è¿”å›è®¡æ•°å€¼ */
 }
 
 /**
- * @brief       ¶¨Ê±Æ÷³õÊ¼»¯º¯Êı
- * @param       arr:×Ô¶¯ÖØ×°ÔØÖµ
- *              psc:¶¨Ê±Æ÷·ÖÆµÏµÊı
- * @retval      ÎŞ
+ * @brief       å®šæ—¶å™¨åˆå§‹åŒ–å‡½æ•°
+ * @param       arr:è‡ªåŠ¨é‡è£…è½½å€¼
+ *              psc:å®šæ—¶å™¨åˆ†é¢‘ç³»æ•°
+ * @retval      æ— 
  */ 
 void usmart_timx_init(uint16_t arr, uint16_t psc)
 { 
     USMART_TIMX_CLK_ENABLE();
     
-    g_timx_usmart_handle.Instance = USMART_TIMX;                 /* Í¨ÓÃ¶¨Ê±Æ÷4 */
-    g_timx_usmart_handle.Init.Prescaler = psc;                   /* ·ÖÆµÏµÊı */
-    g_timx_usmart_handle.Init.CounterMode = TIM_COUNTERMODE_UP;  /* ÏòÉÏ¼ÆÊıÆ÷ */
-    g_timx_usmart_handle.Init.Period = arr;                      /* ×Ô¶¯×°ÔØÖµ */
+    g_timx_usmart_handle.Instance = USMART_TIMX;                 /* é€šç”¨å®šæ—¶å™¨4 */
+    g_timx_usmart_handle.Init.Prescaler = psc;                   /* åˆ†é¢‘ç³»æ•° */
+    g_timx_usmart_handle.Init.CounterMode = TIM_COUNTERMODE_UP;  /* å‘ä¸Šè®¡æ•°å™¨ */
+    g_timx_usmart_handle.Init.Period = arr;                      /* è‡ªåŠ¨è£…è½½å€¼ */
     g_timx_usmart_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     HAL_TIM_Base_Init(&g_timx_usmart_handle);
-    HAL_TIM_Base_Start_IT(&g_timx_usmart_handle);                /* Ê¹ÄÜ¶¨Ê±Æ÷ºÍ¶¨Ê±Æ÷ÖĞ¶Ï */
-    HAL_NVIC_SetPriority(USMART_TIMX_IRQn,3,3);                  /* ÉèÖÃÖĞ¶ÏÓÅÏÈ¼¶£¬ÇÀÕ¼ÓÅÏÈ¼¶3£¬×ÓÓÅÏÈ¼¶3 */
-    HAL_NVIC_EnableIRQ(USMART_TIMX_IRQn);                        /* ¿ªÆôITMÖĞ¶Ï */ 
+    HAL_TIM_Base_Start_IT(&g_timx_usmart_handle);                /* ä½¿èƒ½å®šæ—¶å™¨å’Œå®šæ—¶å™¨ä¸­æ–­ */
+    HAL_NVIC_SetPriority(USMART_TIMX_IRQn,3,3);                  /* è®¾ç½®ä¸­æ–­ä¼˜å…ˆçº§ï¼ŒæŠ¢å ä¼˜å…ˆçº§3ï¼Œå­ä¼˜å…ˆçº§3 */
+    HAL_NVIC_EnableIRQ(USMART_TIMX_IRQn);                        /* å¼€å¯ITMä¸­æ–­ */ 
 }
 
 /**
- * @brief       USMART¶¨Ê±Æ÷ÖĞ¶Ï·şÎñº¯Êı
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       USMARTå®šæ—¶å™¨ä¸­æ–­æœåŠ¡å‡½æ•°
+ * @param       æ— 
+ * @retval      æ— 
  */
 void USMART_TIMX_IRQHandler(void)
 {
-    if(__HAL_TIM_GET_IT_SOURCE(&g_timx_usmart_handle,TIM_IT_UPDATE)==SET)/* Òç³öÖĞ¶Ï */
+    if(__HAL_TIM_GET_IT_SOURCE(&g_timx_usmart_handle,TIM_IT_UPDATE)==SET)/* æº¢å‡ºä¸­æ–­ */
     {
-        usmart_dev.scan();                                   /* Ö´ĞĞusmartÉ¨Ãè */
-        __HAL_TIM_SET_COUNTER(&g_timx_usmart_handle, 0);;    /* Çå¿Õ¶¨Ê±Æ÷µÄCNT */
-        __HAL_TIM_SET_AUTORELOAD(&g_timx_usmart_handle, 100);/* »Ö¸´Ô­À´µÄÉèÖÃ */
+        usmart_dev.scan();                                   /* æ‰§è¡Œusmartæ‰«æ */
+        __HAL_TIM_SET_COUNTER(&g_timx_usmart_handle, 0);;    /* æ¸…ç©ºå®šæ—¶å™¨çš„CNT */
+        __HAL_TIM_SET_AUTORELOAD(&g_timx_usmart_handle, 100);/* æ¢å¤åŸæ¥çš„è®¾ç½® */
     }
     
-    __HAL_TIM_CLEAR_IT(&g_timx_usmart_handle, TIM_IT_UPDATE);/* Çå³ıÖĞ¶Ï±êÖ¾Î» */
+    __HAL_TIM_CLEAR_IT(&g_timx_usmart_handle, TIM_IT_UPDATE);/* æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½ */
 }
 
 #endif
