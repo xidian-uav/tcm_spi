@@ -7,10 +7,14 @@ extern SPI_HandleTypeDef tcmHSpi; /* TCMSPI句柄 */
 
 #define TCM_SPI                             SPI1
 #define TCM_SPI_BUFF_SIZE                   512
-
+#define TCM_COMMAND_BUFF_SIZE               512
 /* TCM命令宏定义 */
 
-/* From TPM 2.0 Part 2: Definition of TCM_CC Constants */
+
+#define TCM_PCR_SELECT_MAX 3
+#define TPM2_NUM_PCR_BANKS 2
+
+/* From TCM 2.0 Part 2: Definition of TCM_CC Constants */
 typedef uint32_t                               TCM_CC;
 #define TCM_CC_NV_UndefineSpaceSpecial       ((TCM_CC) 0x0000011f)
 #define TCM_CC_FIRST TCM_CC_NV_UndefineSpaceSpecial
@@ -134,6 +138,11 @@ typedef uint32_t                               TCM_CC;
 #define TCM_CC_ACT_SetTimeout                ((TCM_CC) 0x00000198)
 #define TCM_CC_LAST                          ((TCM_CC) 0x00000198)
 #define TCM_CC_Vendor_TCG_Test               ((TCM_CC) 0x20000000)
+
+/* Definition of BYTE TPMI_YES_NO Type */
+typedef uint8_t TPMI_YES_NO;
+#define TCM_NO  0 /* a value of 0 */
+#define TCM_YES 1 /* a value of 1 */
 
 /* Definition of UINT16 TCM_ST Constants <INOUT S> */
 typedef uint16_t TCM_ST;
@@ -260,8 +269,7 @@ typedef TCM_HANDLE          TCM_RH;
 #define TCM_RH_LAST                 ((TCM_RH) 0x4004FFFF) /* R */
 
 void tcm_init();
-void target_reset();
 void tcm_read_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *dest_buf, uint8_t read_size);
 void tcm_write_register(uint8_t addr_byte1, uint8_t addr_byte2, uint8_t *data, uint8_t data_size);
-int sendCommand(uint8_t *cmd_frame, int cmd_size, uint8_t *resp_buf);
+int sendCommand(uint8_t *cmd_frame, int cmd_size, uint8_t *resp_buf, uint8_t delayTime);
 #endif

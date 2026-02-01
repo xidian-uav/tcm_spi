@@ -1,4 +1,4 @@
-#include "./stm32f1xx_it.h"
+﻿#include "./stm32f1xx_it.h"
 #include "./SYSTEM/sys/sys.h"
 #include "./SYSTEM/usart/usart.h"
 #include "./SYSTEM/delay/delay.h"
@@ -6,126 +6,78 @@
 #include "./BSP/TCM/tcm.h"
 #include "./trust_interface.h"
 
+/* 示例密文数据（仅用于调试验证） */
+uint8_t tcmRSADncrypt[] = "\x80\x02\x00\x00\x01\x21\x00\x00\x01\x59\x80\x00\x00\x00\x00\x00\x00\x09\x40\x00\x00\x09\x00\x00\x00\x00\x00\x01\x00\x53\x98\x9b\xed\x97\x18\x46\x6a\x5e\xf4\xa9\xc5\xfe\xa1\xe6\xf0\x99\x45\x2e\x7b\xf1\xc1\xe8\x3d\x9e\x0c\xa0\x34\xe9\x2b\x46\x24\xee\xa3\xa3\x87\x36\x2f\x0a\x30\x32\x27\xce\x06\xa8\xe6\x1d\xe4\x5d\xcb\x93\x7f\xfc\x9b\x58\xbf\xa9\xb1\x7b\xf2\x9b\x99\x25\x07\xe7\x5c\x89\xee\xb5\xbb\x2a\x28\xf7\xc5\xc4\xe5\x14\x74\x60\x8e\xa0\xb0\x85\x7f\x1b\xa3\x51\x99\x47\x4a\x5d\xad\x53\x55\x22\xb8\x41\xaa\x0a\x95\xdc\x37\x9d\x6e\xc2\x3b\x21\x23\xf4\x75\x31\x38\x48\x18\xff\x48\x8e\x4f\x08\xab\x1f\x11\xa7\xb3\x61\x48\xea\x7d\x54\x63\x81\x1d\xb1\x8e\xf6\xd2\xd5\x0c\x31\x7c\xd6\x80\xa0\x5b\x9f\xe6\xe8\x8a\x2c\x09\x2e\xf7\xd8\x98\x24\x0d\x83\x86\x65\xaf\x45\x0f\x3b\x07\xf2\x3d\xa4\x48\xcb\x3c\x2c\x09\x03\xe3\x7a\x40\x1e\x14\xeb\x66\xa1\xb8\x57\xe0\xa1\x9f\x83\x05\xb0\xd2\x7f\xfb\x5c\x9c\x0a\x55\xb5\x18\x4f\x1a\x51\x6f\xfa\xe8\xb3\xe9\x73\x8c\xf7\x15\x59\x3a\x95\x6e\xea\x87\xe0\x12\x73\xe5\x9c\x50\x39\x2c\x66\x6d\xfa\x7b\x25\xbd\x72\xaa\x6c\x0c\x79\xc9\xeb\x0c\xf3\xa5\xde\x99\x9b\x4c\xa4\x18\x48\x42\x32\x67\x49\x0f\xc6\x3f\x45\xa2\x00\x10\x00\x00";
+
+/* TCM 收发缓冲区 */
+uint8_t respBuf[TCM_SPI_BUFF_SIZE];
+uint8_t encrypt_data[TCM_SPI_BUFF_SIZE];
+
 int main(void)
 {
-  HAL_Init();                         /* 初始化HAL库 */
-  sys_stm32_clock_init(RCC_PLL_MUL9); /* 设置时钟为72Mhz */
-  delay_init(72);                     /* 延时初始化 */
-  usart_init(115200);                 /* 串口初始化为115200 */
-  led_init();                         /* 初始化LED */
-  tcm_init();                         /* 初始化TCM */
+    HAL_Init();                         /* 初始化 HAL */
+    sys_stm32_clock_init(RCC_PLL_MUL9); /* 系统时钟 72MHz */
+    delay_init(72);                     /* 延时初始化 */
+    usart_init(115200);                 /* 串口波特率 115200 */
+    led_init();                         /* LED 初始化 */
+    tcm_init();                         /* TCM 初始化 */
 
-  printf("Waiting...\r\n");
+    printf("Waiting...\r\n");
 
-  uint16_t i;
+    /* TCM 启动 */
+    lp_tcm_startup(respBuf);
+    printf("tcm startup successfully!\r\n\r\n");
 
-  /* USART 相关变量 */
-  uint8_t len;
-  uint16_t times = 0;
+#if 0
+    /* 1) 创建 RSA 主密钥并加解密示例 */
+    uint32_t key_handle = lp_tcm_create_rsa(respBuf);
+    printf("tcm createPrimary successfully!\r\n\r\n");
 
-  /* TCM相关变量 */
-  uint8_t respBuf[TCM_SPI_BUFF_SIZE];
-  uint16_t respSize = 0;
+    uint8_t plainData[] = "\x8d\x6f\x32\x45\xbe\x84\x7d\x75\x35\x7a\x9e\x4e\x9d\xb2\x2c\x80\x96\xb8\xd4\xe8\xf2\xd0\x2f\x1f\x76\xbf\x39\xda\x77\xcf\xb2\xd6";
+    uint16_t plainDataSize = 32;
+    uint16_t encryptDataSize = lp_tcm_rsaencrypt(key_handle, plainData, plainDataSize, encrypt_data);
 
-  // TCM_STARTUP
-  lp_tcm_startup(respBuf);
-  printf("OK: ");
+    printf("OK: ");
+    for (uint16_t i = 0; i < encryptDataSize; i++)
+    {
+        printf("%02x ", encrypt_data[i]);
+    }
+    printf("\r\n");
+    printf("tcm rsaencrypt successfully!\r\n\r\n");
 
-  for (i = 0; i < 10; i++)
-  {
-    printf("%02x ", respBuf[i]);
-  }
-  printf("\r\n");
-  
-  printf("tcm startup successfully!\r\n");
-  printf("\r\n");
+    uint16_t decryptDataSize = lp_tcm_rsadecrypt(key_handle, encrypt_data, encryptDataSize, respBuf);
+    printf("OK: ");
+    for (uint16_t i = 0; i < decryptDataSize; i++)
+    {
+        printf("%02x ", respBuf[i]);
+    }
+    printf("\r\n");
+    printf("tcm rsadecrypt successfully!\r\n\r\n");
 
-  uint8_t data[] = "\x01\x02";
-  respSize = lp_tcm_hash_sm3(data, 2, respBuf);
-  printf("OK: ");
-  for (i = 0; i < respSize; i++)
-  {
-    printf("%02x ", respBuf[i]);
-  }
-  printf("\r\n");
+    /* 2) PCR 操作示例 */
+    uint8_t pcrExtendData[] = "\x0b\xc0\x00\x98\x20\xc0\x35\x33\x63\xd7\xd5\x7f\xf7\x08\xc3\xf5\xc1\x30\x65\x8b\x59\x41\x86\xe3\xe5\xbf\x55\x8f\xd5\xf7\xc8\xed";
+    lp_tcm_pcrextend(16, pcrExtendData, 32, respBuf);
+    printf("tcm pcrextend successfully!\r\n\r\n");
 
-  printf("tcm hash successfully!\r\n");
-  printf("\r\n");
+    lp_tcm_pcrread(16, respBuf);
+    printf("tcm pcrread successfully!\r\n\r\n");
 
-  /*
-  //TPM2_CLEAR
-  uint8_t tpm2_clear[] = "\x80\x02\x00\x00\x00\x1b\x00\x00\x01\x26\x40\x00\x00\x0c\x00\x00\x00\x09\x40\x00\x00\x09\x00\x00\x00\x00\x00";
-  respSize = sendCommand(tpm2_clear, 27, respBuf);
+    lp_tcm_pcrreset(16, respBuf);
+    printf("tcm pcrreset successfully!\r\n\r\n");
 
-  printf("OK: ");
-  for(i = 0; i < respSize; i++ )
-  {
-    printf("%02x ", respBuf[i]);
-  }
-  printf("tcm clear successfully!\r\n");
-  printf("\r\n");
-  */
+    lp_tcm_pcrread(16, respBuf);
+    printf("tcm pcrread successfully!\r\n\r\n");
 
-  /*
-  // TPM2_GETRANDOM
-  uint8_t tpm2_getrandom[] = "\x80\x01\x00\x00\x00\x0c\x00\x00\x01\x7b\x00\x10";
-  respSize = sendCommand(tpm2_getrandom, 12, respBuf);
+    /* 3) 哈希示例 */
+    uint8_t hash_data[] = "\xb9\x7b\x6d\x49\xfd\x5e\xfe\x81\x64\xeb\x15\xf6\x9a\x99\xe5\xc0\x80\x39\xc1\x73\x7a\x0b\xbd\xb9\x07\xe4\x5d\x9d\xe6\x4d\x66\x27\x05\x75\x31\x4e\xd4\x76\xb7\xd6\xcf\x95\xf5\xe1\xee\x7b\x30\x07\xdf\x0b\xfa\x02\x18\x5c\x86\x7d\x5c\xf0\xc9\x61\x1c\x6e\x84\x14\x78\x59\x66\xee\xb4\x08\x6b\x64\xb1\x47\xf4\xe3\x9a\x70\xf0\xba\x37\xca\x49\x24\xe6\x0c\xae\x7d\x67\xf0\xd4\x3a\xae\x37\x34\xdb\x61\xb1\x99\xa6\x4b\x33\xf2\xb9\x59\x88\xde\x60\x94\xa1\x96\xe7\x39\x43\xe1\xd8\x71\x4e\x01\x53\x5c\x9d\xba\x21\xf5\x5e\xb5\x9d";
+    lp_tcm_hash_sha256(hash_data, 128, respBuf);
+    printf("tcm sha256hash successfully!\r\n\r\n");
 
-  printf("OK: ");
-  for(i = 0; i < respSize; i++ )
-  {
-    printf("%02x ", respBuf[i]);
-  }
-  printf("tcm getrandom successfully!\r\n");
-  printf("\r\n");
+    lp_tcm_hash_sm3(hash_data, 128, respBuf);
+    printf("tcm sm3hash successfully!\r\n\r\n");
+#endif
 
-
-  // TPM2_HASH
-  uint8_t tpm2_gethash_sm3_256[] = "\x80\x01\x00\x00\x00\x20\x00\x00\x01\x7d\x00\x0e\x99\x4a\xf6\xb3\xa5\x7d\x4d\x85\xd6\xc1\xe8\xfd\xba\xcf\x00\x0b\x40\x00\x00\x01";
-  respSize = sendCommand(tpm2_gethash_sm3_256, 32, respBuf);
-
-  printf("OK: ");
-  for(i = 0; i < respSize; i++)
-  {
-    printf("%02x ", respBuf[i]);
-  }
-  printf("\r\n");
-
-  printf("tcm hash successfully!\r\n");
-  */
-
-  // while (1)
-  // {
-  //     if (g_usart_rx_sta & 0x8000)        /* 接收到了数据? */
-  //     {
-  //         len = g_usart_rx_sta & 0x3fff;  /* 得到此次接收到的数据长度 */
-  //         printf("\r\n您发送的消息为:\r\n");
-
-  //         HAL_UART_Transmit(&g_uart1_handle,(uint8_t*)g_usart_rx_buf, len, 1000);    /* 发送接收到的数据 */
-  //         while(__HAL_UART_GET_FLAG(&g_uart1_handle,UART_FLAG_TC) != SET);           /* 等待发送结束 */
-
-  //         printf("\r\n\r\n");             /* 插入换行 */
-  //         g_usart_rx_sta = 0;
-  //     }
-  //     else
-  //     {
-  //         times++;
-
-  //         if (times % 5000 == 0)
-  //         {
-  //             printf("\r\n正点原子 STM32开发板 串口实验\r\n");
-  //             printf("正点原子@ALIENTEK\r\n\r\n\r\n");
-  //         }
-
-  //         if (times % 200 == 0)
-  //         {
-  //             printf("请输入数据,以回车键结束\r\n");
-  //             HAL_UART_Transmit(&g_uart1_handle, data, sizeof(data) - 1, 1000);    /* 发送接收到的数据 */
-  //             while(__HAL_UART_GET_FLAG(&g_uart1_handle,UART_FLAG_TC) != SET);     /* 等待发送结束 */
-  //         }
-  //         if (times % 30  == 0) LED0_TOGGLE(); /* 闪烁LED,提示系统正在运行. */
-
-  //         delay_ms(10);
-  //     }
-  // }
+    for (;;)
+    {
+    }
 }
